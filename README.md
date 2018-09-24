@@ -1,2 +1,2 @@
 # Readable
-Scripting language project
+High-level language project
