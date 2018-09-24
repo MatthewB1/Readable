@@ -10,7 +10,7 @@ To create a highly readable, high level scripting language that can be easily un
 ## Important syntax
 - All executable lines of code end with a full stop (.)
 - All function declarations, group declarations and condition checks end with a colon (:)
-- White spacing is optional
+- White spacing is not required, but is valid
 
 ---
 
