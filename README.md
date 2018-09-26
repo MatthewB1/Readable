@@ -5,8 +5,6 @@
 ## Purpose
 To create a highly readable, high level scripting language that can be easily understood by people with zero knowledge of scripting or programming, accessible via a webpage allowing users to write and run their script within the webpage.
 
-In pursuit of this project I would also like to explore the advantages and disadvantages of a variety of web framework architechture and models. Going into this project I have professional experience with the Spring MVC model for Java, as well as a minor amount of experience with ASP.NET MVC with C#.
-
 ---
 
 ## Important syntax
