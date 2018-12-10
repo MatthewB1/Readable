@@ -34,8 +34,8 @@ namespace Utils {
 
 	std::vector<char> readFile(std::string path);
 
-	std::vector<std::string> tokenise(const std::vector<char>& chars);
+	std::vector<Token> tokenise(const std::vector<char>& chars);
 
-	//TreeNode<std::string> parse(const std::vector<std::string>& tokens);
+	//TreeNode<Token> parse(const std::vector<std::string>& tokens);
 
 }

@@ -12,12 +12,12 @@ int main() {
 
 
 	//for now, tokenise will take an argument of a vector of chars, and return a vector of strings
-	std::vector<std::string> tokens = Utils::tokenise(code);
+	std::vector<Token> tokens = Utils::tokenise(code);
 
 	//print out the tokens!!
 	Utils::printTokens(tokens);
 
-	//TreeNode<std::string> tree = Utils::parse(tokens);
+	//TreeNode<Token> tree = Utils::parse(tokens);
 
 	//GraphVis for outputting tree
 	return 0;

@@ -24,7 +24,8 @@ namespace Utils {
 		return buffer;
 	}
 
-	std::vector<std::string> Utils::tokenise(const std::vector<char>& chars) {
+	std::vector<Token> Utils::tokenise(const std::vector<char>& chars) {
+		//all of this needs rewriting
 		std::vector<std::string> tokens;
 
 		std::string token("");
