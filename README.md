@@ -1,52 +1,56 @@
-# Readable
+# Compiler for a high-level language
 
 ---
 
 ## Purpose
-To create a highly readable, high level scripting language that can be easily understood by people with zero knowledge of scripting or programming, accessible via a webpage allowing users to write and run their script within the webpage.
+The main focus of this project is the implementation of a compiler, but I need something to compiler. For this I have designed a relatively simple high-level language; in line with the ideas of literate programming, first put foward by Donald Knuth, this language will be designed with 'readability' in mind. 
+
+
 
 ---
 
 ## Important syntax
-- All executable lines of code end with a full stop (.)
-- All function declarations, group declarations and condition checks end with a colon (:)
+- All executable lines of code end with a semi-colon;
 - White spacing is not required, but is valid
 
 ---
 
 ## Key words
 
-These words have predefined meanings that are used by the interpreter and thus cannot be used as identifiers in a readable script.
+These words have predefined meanings that are used by the compiler and thus cannot be used as identifiers in a readable script.
 
-- is
-- end
-- task
-- group
 - number
-- flag
+- bool
 - text
 - true
 - false
+- flip
+- function
+- group
+- list
 
 ---
 
 ## Comments
+- Anything interpreted by the compiler as a comment will not be executed as a part of the program.
 ```
-# This is a single-line comment
+// This is a single-line comment
+
+/*
+this is a multi-line comment
+*/
 ```
 
 ---
 
 ## Data types
-
-- Number (int or float, depending on assignment)
-- Flag (true or false)
-- Text (string)
-
+- number (int or float, depending on assignment)
+- bool (true or false)
+- text (string)
 ---
 
 ## Complex types
-- Group (struct)
+- Group (operates like a c-style struct)
 
 ---
 
@@ -58,31 +62,38 @@ These words have predefined meanings that are used by the interpreter and thus c
 ## Variable declaration
 - When declared outside of a group, variables are dynamically declared with the "let" and "be" key words
 ```
-myNumb is 10.
-myText is "Hello, World!".
-myFlag is true.
+myNumb = 10;
+myText = "Hello, World!";
+myFlag = true;
+```
+- Casting is supported upon assigning from a variable
+```
+myNumb = 10;
+toText = (text)myNumb;
 ```
 
 ---
 
 ## Variable opertions
 
-#### Numbers
+#### numbers
 ```
-let myNumber be 10.
+let myNumber = 10;
 
-add 10 to myNumber.         # Addition
-take 5 from myNumber.       # Subtraction
-divide myNumber by 2.       # Division
-multiply myNumber by 4.     # Multiplication
+nyNumber += 10;    # Addition
+myNumber -= 5;     # Subtraction
+myNumber /= 2;     # Division
+myNumber *= 4;     # Multiplication
+myNumber %= 3;	   # Modulus
 ```
 
-#### Flags
+#### bools
+- keyword 'flip' followed by a bool variable inverts the current state of the bool
 ```
-myFlag is true.
+myFlag = true.
 
-myFlag is false.    # Assign a value
-flip myFlap.        # Flip the current value
+myFlag = false.    # Assign a value
+flip myFlag.        # Flip the current value
 ```
 
 
@@ -91,39 +102,44 @@ flip myFlap.        # Flip the current value
 ## Group declaration
 - When declared inside of a group, members must state their type
 ```
-group myGroup:
-number varOne.
-flag varTwo.
-text varThree.
-end group.
+group myGroup{
+number varOne;
+flag varTwo;
+text varThree;
+}
 ```
 
 ---
 
 ## Equality and inequality checking
 - Checking is done with if keyword
-- End of exeutable code ended with "end" keyword
+- Scoping logic within brackets is not required, but is valid
 ```
-if myVar is 10:
+if myVar == 10{
 # do code
-end.
+}
 
-if myVar isnt 10:
+if (myVar == 10 && otherLogic()){
 # do code
-end.
+}
+
+if myVar != 10{
+# do code
+}
 ```
 
 ---
 
 ## Printing
 
-- All printing is done with the print keyword.
+- printing is done with the print keyword.
 - Arguments are concatonated and separated with a space.
+- it is not required to surround the print arguments with brackets, but it is valid
 
 ```
 print "Hello world!".
 
-let age be 10.
+let age = 10.
 print "Jimmy was " age " years old".
 ```
 
@@ -132,32 +148,34 @@ print "Jimmy was " age " years old".
 ## User input
 
 ```
-let name be ask user "Enter your name".
+let name = ask user "Enter your name".
 ```
 
 ---
 
-## Tasks (functions)
+## Functions
 #### Without parameters
 
 ```
-# Declaring a task
-task myTask:
-end task.
+# Declaring a function
+function myFunction{
+//function body
+}
 
-# Calling a task
-do myTask.
+# Calling a function
+myFunction();
 ```
 
 #### With parameters
-- When declaring a task with parameters the data type must be declared
+- When declaring a function with parameters the data type must be declared
 ```
-# Declaring a task with parameters
-task myTaskWithParams with number a and text b:
-end task.
+# Declaring a function with parameters
+function myTaskWithParams with number a and text b{
+//function body
+}
 
 # calling a task with parameters
-let myNumb be 10.
+let myNumb = 10.
 do myTask with myNumb and "Hello, world!".
 ```
 
