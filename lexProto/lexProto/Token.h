@@ -1,23 +1,11 @@
-#include <string>
+typedef enum {
+identifier, keyword, op, delim, 
+}
+TypeOf;
 
-enum class token_ { Identifier, Literal, Keyword, Comment, Seperator, Operator};
-
-class Token
-{
-public:
-	~Token();
-	Token(token_ token, std::string value, int line, int pos);
-
-	token_ getTokenType();
-	std::string getValue();
-	int getLineNumber();
-	int getCharacterPos();
-private:
-	Token();
-	token_ token_type;
-	//how to store the value??
-	std::string value;
-	int line_number;
-	int character_pos;
-};
-
+typedef struct {
+	TypeOf type;
+	char *instance;
+	int lineNum;
+	int charPos;
+} Token;

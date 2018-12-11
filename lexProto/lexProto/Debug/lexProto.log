@@ -1,6 +1,2 @@
-﻿  Token.cpp
-  Utils.cpp
-c:\code\repos\lexproto\lexproto\utils.cpp(18): warning C4244: 'argument': conversion from 'std::streamoff' to 'const unsigned int', possible loss of data
-  main.cpp
-  Generating Code...
-  lexProto.vcxproj -> C:\code\repos\lexProto\Debug\lexProto.exe
+﻿  main.cpp
+  lexProto.vcxproj -> C:\code\repos\finalProject\lexProto\Debug\lexProto.exe

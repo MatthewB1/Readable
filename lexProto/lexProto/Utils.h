@@ -1,9 +1,9 @@
-#include <vector>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <algorithm>
 
-#include "Token.h"
+#include "Lexical.h"
 #include "TreeNode.hpp"
 namespace Utils {
 
@@ -34,7 +34,8 @@ namespace Utils {
 
 	std::vector<char> readFile(std::string path);
 
-	std::vector<Token> tokenise(const std::vector<char>& chars);
+	void print(std::string arg);
+
 
 	//TreeNode<Token> parse(const std::vector<std::string>& tokens);
 

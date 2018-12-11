@@ -121,6 +121,7 @@
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Lexical.h" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TreeNode.hpp" />

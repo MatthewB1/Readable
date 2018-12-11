@@ -11,7 +11,7 @@ The main focus of this project is the implementation of a compiler, but I need s
 
 ## Important syntax
 - All executable lines of code end with a semi-colon;
-- White spacing is not required, but is valid
+- White spacing is not enforced in all cases - eg. <identifier><literal> is not valid, but <literal><operator><identifier> is valid
 
 ---
 
@@ -19,11 +19,10 @@ The main focus of this project is the implementation of a compiler, but I need s
 
 These words have predefined meanings that are used by the compiler and thus cannot be used as identifiers in a readable script.
 
-- number
-- bool
-- text
-- true
-- false
+- var
+- while
+- if
+- return
 - flip
 - function
 - group
@@ -145,14 +144,6 @@ print "Jimmy was " age " years old".
 
 ---
 
-## User input
-
-```
-let name = ask user "Enter your name".
-```
-
----
-
 ## Functions
 #### Without parameters
 
@@ -167,21 +158,23 @@ myFunction();
 ```
 
 #### With parameters
-- When declaring a function with parameters the data type must be declared
 ```
 # Declaring a function with parameters
-function myTaskWithParams with number a and text b{
-//function body
+function myFunctionWithParams a, b{
+//statement
 }
 
-# calling a task with parameters
-let myNumb = 10.
-do myTask with myNumb and "Hello, world!".
+# calling a function with parameters
+let myNumb = 10;
+myFunction(myNumb,"argument!");
 ```
 
 ---
 
 ## Returning
+- return types do not need to be declared, but if they, the value returned from a function is cast to the stated data type
+
+function returnSeven 
 
 ---
 
@@ -190,58 +183,55 @@ do myTask with myNumb and "Hello, world!".
 #### About:
 
 - A dynamically sized container
-- Lists can a mixture of data types
+- Lists can contain elements of different data types
 
 #### Functionality:
 
 - Adding an item to the list
 - Removing an item from the list
 - Checking if the list contains a value
-
-#### Exceptions:
-
-- Exception thrown when trying to remove item a list does not contain
-- Exception thrown when assigning a list item to the wrong variable type 
+- Access elements through index eg list[0];
 
 #### Declaration
 
 ```
-# Declaring a list
-let myList be list.
+# Declaring an empty list
+var list = [];
 ```
 
 
-#### Adding items to a list
+#### Adding items to the end of a list
 ```
-add 10 to myList.
-add "Hello" to myList.
-myFLag is false.
-add myFlag to myList.
+list += 5;
+list push 5;
 ```
 
 #### Removing items from the list
 ```
-remove 10 from myList.
+mylist remove 7;
 ```
 
 #### Checking list contents
 ```
-if myList contains 10:
-end.
+if myList contains 10{
+//statement
+}
 ```
 
 #### Accessing items in a list
 ```
-myNumber is myList item 1.
+myNumber = myList[0];
 ```
 
 ---
 
 #### Loops
 
-##### Do loops
+##### while loop
+
+while expression {
+statement
+}
 
 
-
-#### Errors:
 
