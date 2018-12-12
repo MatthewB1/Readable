@@ -11,7 +11,7 @@ The main focus of this project is the implementation of a compiler, but I need s
 
 ## Important syntax
 - All executable lines of code end with a semi-colon;
-- White spacing is enforced with the exception of seperators eg. function <identifier>(<identifier>){<expression>;}
+- White spacing is enforced with the exception of seperators eg. function \<identifier\>\(\<identifier\>\)\{\<expression\>;\}
 
 ---
 
