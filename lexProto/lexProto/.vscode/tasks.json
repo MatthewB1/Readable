@@ -9,6 +9,7 @@
                 "-g",
                 "main.cpp",
                 "utils.cpp",
+                "lexical.cpp",
                 "Node.hpp",
                 "TreeNode.cpp",
                 "Token.cpp"

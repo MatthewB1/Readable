@@ -1,2 +1,10 @@
-number x = 4;
-x = x + 7;
+var x = 3;
+var y = 9;
+if (x == 3){
+    y = 7;
+}
+printNum(y);
+
+function printNum(a){
+    print a;
+}

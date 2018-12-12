@@ -1,42 +1,22 @@
-#include <iostream>
-#include <fstream>
-#include <string>
 #include <algorithm>
+#include <fstream>
 
 #include "Lexical.h"
 #include "TreeNode.hpp"
 namespace Utils {
 
-	template <typename T>
-	void printVec(const T& v) {
-			std::for_each(v.cbegin(), v.cend(), [](auto o) {std::cout << o; });
-			std::cout << "\n\n";
-		}
-
-
-	template <typename T>
-	void printTokens(const T& v) {
-		std::cout << "Tokens: {";
-		for (size_t i = 0; i < v.size(); i++)
-		{
-			//specialcase for printing new line character
-			if (v[i] == "\n")
-				std::cout << "\\n";
-			else
-				std::cout << v[i];
-
-			if (v[i] != v[v.size() - 1]) {
-				std::cout << ", ";
-			}
-		}
-		std::cout << "}";
-	}
-
-	std::vector<char> readFile(std::string path);
-
-	void print(std::string arg);
-
-
-	//TreeNode<Token> parse(const std::vector<std::string>& tokens);
-
+template <typename T> void printVec(const T &v) {
+  std::cout << "\n";
+  std::for_each(v.cbegin(), v.cend(), [](auto o) { std::cout << o; });
+  std::cout << "\n";
 }
+
+void printTokens(const std::vector<Token *> &vec);
+
+std::vector<char> readFile(std::string path);
+
+void print(std::string arg);
+
+// TreeNode<Token> parse(const std::vector<std::string>& tokens);
+
+} // namespace Utils
