@@ -43,9 +43,14 @@ this is a multi-line comment
 ---
 
 ## Data types
-- number (int or float, depending on assignment)
-- bool (true or false)
-- text (string)
+variables are dynamically typed, with syntax: var \<identifier\>;
+#### their type is seperated into 3 fundamental types:
+```
+-  number (int or float, depending on assignment)
+-  bool (true or false)
+-  text (string)
+```
+#### a variable instantiated but not given a value is undefined.
 ---
 
 ## Complex types
@@ -59,11 +64,12 @@ this is a multi-line comment
 ---
 
 ## Variable declaration
-- When declared outside of a group, variables are dynamically declared with the "let" and "be" key words
+- When declared outside of a group, variables are dynamically declared with the "var" key word
 ```
-myNumb = 10;
-myText = "Hello, World!";
-myFlag = true;
+var aVar;  //undefined?
+var myNumb = 10;
+var myText = "Hello, World!";
+var myFlag = true;
 ```
 - Casting is supported upon assigning from a variable
 ```
