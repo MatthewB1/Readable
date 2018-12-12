@@ -28,7 +28,7 @@ void Utils::printTokens(const std::vector<Token *> &vec) {
   std::cout << "Tokens: {\n";
   for (size_t i = 0; i < vec.size(); i++) {
     std::cout << "\t";
-    // switch through tokenType enum to print name of value
+    // switch through tokenType enum to get name of value
     switch (vec[i]->getTokenType()) {
     case 0:
       std::cout << "identifier";

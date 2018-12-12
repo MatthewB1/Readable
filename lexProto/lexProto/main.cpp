@@ -2,9 +2,8 @@
 
 int main() {
 
-  // read the file in first, idk how to do this relative to the project lol
-  std::vector<char> code = Utils::readFile(
-      "C:\\code\\repos\\finalProject\\lexProto\\lexProto\\code.txt");
+  // read the file in first
+  std::vector<char> code = Utils::readFile("code.txt");
   // output the code we are about to lex
   Utils::print("The code! "
                ":\n**********************************************************");

@@ -1,4 +1,5 @@
 #include "Lexical.h"
+#include <stack>
 
 #define current_char chars[i]
 #define newLine current_char == '\n'
@@ -49,20 +50,72 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
 }
 
 void Lexical::preScan(const std::vector<char> &chars) {
-  if (!bracketsBalanced(chars)) {
-    std::cout << "\n Brackets were not balanced! Check log for more "
-                 "info\nExiting program....";
-    exit(0);
-  }
+  bracketsBalanced(chars);
   // then check for valid reference to identifiers?
   // not sure how to go about doing this yet
   // TODO ask chris
 }
 
+#define openPeren '('
+#define closePeren ')'
+#define openBrace '{'
+#define closeBrace '}'
+#define openSquare '['
+#define closeSquare ']'
+#define unbalancedBracketError                                                 \
+  "\n Brackets were not balanced! Check log for more info\nExiting "           \
+  "program...."
+
 bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
-  // implement algorithm from codeschool video
-  return true;
+  // for now, just make it work, later add good error messages
+  // int line_no;
+  // int char_no;
+  std::stack<char> stack;
+
+  for (int i = 0; i < chars.size(); i++) {
+    char currentchar = current_char;
+    // if it's not a bracket, we ignore it
+    if (isBracket(current_char)) {
+      if (current_char == openPeren || current_char == openBrace ||
+          current_char == openSquare)
+        stack.push(current_char);
+      else {
+        switch (current_char) {
+        case closePeren:
+          if (stack.top() == openPeren) {
+            stack.pop();
+          } else {
+            print(unbalancedBracketError);
+            exit(0);
+          }
+          break;
+        case closeBrace:
+          if (stack.top() == openBrace) {
+            stack.pop();
+          } else {
+            print(unbalancedBracketError);
+            exit(0);
+          }
+          break;
+        case closeSquare:
+          if (stack.top() == openSquare) {
+            stack.pop();
+          } else {
+            print(unbalancedBracketError);
+            exit(0);
+          }
+          break;
+        }
+      }
+    }
+  }
+  if (stack.size() > 0) {
+    print(unbalancedBracketError);
+    exit(0);
+  }
 }
+
+void Lexical::print(const std::string arg) { std::cout << arg; }
 
 bool Lexical::isBracket(const char c) {
   if (c == '(' || c == ')' || c == '{' || c == '}' || c == '[' || c == ']')
@@ -127,8 +180,8 @@ to start again if (chars[i] == ' ') { tokens.push_back(token); token.clear();
                         }
                         //if we are inside of a string
                         else {
-                                //if previous character is not escape character
-                                if (chars[i - 1] != '\\') {
+                                //if previous character is not escape
+character if (chars[i - 1] != '\\') {
                                         //if second non escape character '"',
 string is over, create the token and clear it if (chars[i] == '\"') { token +=
 chars[i]; tokens.push_back(token); token.clear(); continue;
