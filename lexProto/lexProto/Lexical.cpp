@@ -1,12 +1,14 @@
 #include "Lexical.h"
 
 #define current_char chars[i]
+#define prev_char chars[i-1]
 #define newLine current_char == '\n'
 #define space current_char == ' '
 
 std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
   // pre scan should do a run through to check for syntactical issues
 
+//hoistIdentifiers();
   bracketsBalanced(chars);
 
   /*if pre scan didn't cause the program to exit, we can assume the code
@@ -22,11 +24,8 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
     char currentchar = current_char;
 
     if (isDelim(current_char)) {
-      // create token from current_str
-      // could be identifier or literal
-      tokens.push_back(
-          new Token(delim, std::string(1, current_char), line_no, char_pos));
-      current_str = "";
+      tokens.push_back(new Token(delim, std::string(1, current_char), line_no, char_pos));
+      current_str.clear();
       continue;
     }
     if (newLine) {
@@ -35,12 +34,34 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
       continue;
     }
     if (space) {
-      if (current_str == "") {
-        // do nothing
-      } else {
+      //if previous character was also a space, we don't need to run the rest of the logic
+      if (current_str != "") {
         // should be end of token, we should do checks and create the new token
-        current_str = "";
+        if (isKeyword(current_str)){
+          tokens.push_back(new Token(keyword, current_str, line_no, char_pos));
+          current_str.clear();
+          continue;
+        }
+        if (isOp(current_str)){
+          tokens.push_back(new Token(op, current_str, line_no, char_pos));
+          current_str.clear();
+          continue;
+        }
+        if (isLogicalOp(current_str)) {
+          tokens.push_back(new Token(logical_op, current_str, line_no, char_pos));
+          current_str.clear();
+          continue;
+        }
+        /*
+        at this stage I need to distinguish between literals and identifiers
+        I should be able to do this by looking at the last token
+        might not have to, because if it isn't identifier it has to be a literal
+        and if it is non-numeric, not true/false and not surrounded by ""
+        it is a identifier?
+        then we need to check if it's a valid identifier
+        */
       }
+      current_str.clear();
       continue;
     }
     // if nothing else, add char to the current string
@@ -65,6 +86,7 @@ void Lexical::preScan(const std::vector<char> &chars) {
 #define closeSquare ']'
 
 bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
+  //TODO extend for other delims " and ' (easy to do, but check for escape characters)
   // for now, just make it work, later add good error messages
   int line_no = 0;
   int char_pos = 0;

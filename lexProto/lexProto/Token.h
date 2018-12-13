@@ -8,6 +8,8 @@ public:
   Token(const TypeOf tokenType, const std::string val, const int lineNum,
         const int charPos);
 
+  
+
   const TypeOf getTokenType();
   const std::string getVal();
   const int getLine();

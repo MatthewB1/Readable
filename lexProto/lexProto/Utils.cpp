@@ -3,7 +3,6 @@
 std::vector<char> Utils::readFile(std::string path) {
   std::ifstream file(path);
   std::vector<char> buffer;
-
   if (file) {
     /*
      * found this piece of code here :
@@ -27,33 +26,41 @@ std::vector<char> Utils::readFile(std::string path) {
 void Utils::printTokens(const std::vector<Token *> &vec) {
   std::cout << "Tokens: {\n";
   for (size_t i = 0; i < vec.size(); i++) {
-    std::cout << "\t";
+    /*
+    it's obvious that formatting could be improved
+    and it's also obvious that I could format it smarter than I'm doing here
+    */
+    std::cout << "\t" << vec[i]->getLine() << "," << vec[i]->getCharPos();
+    if (vec[i]->getLine() < 10)
+      std::cout << " ";
+    if (vec[i]->getCharPos() < 10)
+      std::cout << " ";
+    std::cout << "- ";
     // switch through tokenType enum to get name of value
     switch (vec[i]->getTokenType()) {
     case 0:
-      std::cout << "identifier";
+      std::cout << "identifier: ";
       break;
     case 1:
-      std::cout << "delimiter";
+      std::cout << "delimiter:  ";
       break;
     case 2:
-      std::cout << "keyword";
+      std::cout << "keyword:    ";
       break;
     case 3:
-      std::cout << "operator";
+      std::cout << "operator:   ";
       break;
     case 4:
-      std::cout << "logical op";
+      std::cout << "logical_op: ";
       break;
     case 5:
-      std::cout << "literal";
+      std::cout << "literal:    ";
       break;
     default:
-      std::cout << "undefined";
+      std::cout << "undefined:  ";
       break;
     }
-    std::cout << ": " << vec[i]->getVal() << " - " << vec[i]->getLine() << ","
-              << vec[i]->getCharPos() << std::endl;
+    std::cout << vec[i]->getVal() << std::endl;
   }
   std::cout << "}";
 }
