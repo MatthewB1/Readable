@@ -1,5 +1,4 @@
 #include "Lexical.h"
-#include <stack>
 
 #define current_char chars[i]
 #define newLine current_char == '\n'
@@ -7,8 +6,10 @@
 
 std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
   // pre scan should do a run through to check for syntactical issues
-  preScan(chars);
-  /*assuming preScan() didn't cause the program to exit, we can assume the code
+
+  bracketsBalanced(chars);
+
+  /*if pre scan didn't cause the program to exit, we can assume the code
     is syntactically valid, and can tokenise it*/
 
   int line_no = 1;
@@ -50,7 +51,7 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
 }
 
 void Lexical::preScan(const std::vector<char> &chars) {
-  bracketsBalanced(chars);
+  // bracketsBalanced(chars);
   // then check for valid reference to identifiers?
   // not sure how to go about doing this yet
   // TODO ask chris
@@ -62,57 +63,75 @@ void Lexical::preScan(const std::vector<char> &chars) {
 #define closeBrace '}'
 #define openSquare '['
 #define closeSquare ']'
-#define unbalancedBracketError                                                 \
-  "\n Brackets were not balanced! Check log for more info\nExiting "           \
-  "program...."
 
 bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
   // for now, just make it work, later add good error messages
-  // int line_no;
-  // int char_no;
-  std::stack<char> stack;
+  int line_no = 0;
+  int char_pos = 0;
+  std::stack<std::pair<std::string, char>> stack;
 
-  for (int i = 0; i < chars.size(); i++) {
+  for (int i = 0; i < chars.size(); i++, char_pos++) {
     char currentchar = current_char;
     // if it's not a bracket, we ignore it
+    if (newLine) {
+      line_no++;
+      char_pos = 0;
+      continue;
+    }
     if (isBracket(current_char)) {
-      if (current_char == openPeren || current_char == openBrace ||
-          current_char == openSquare)
-        stack.push(current_char);
-      else {
+      if (current_char == openPeren || current_char == openBrace ||current_char == openSquare) {
+        stack.push(std::pair<std::string, char>(line_no + "," + char_pos, current_char));
+      } else {
+        // check top of stack for corresponding opening bracket
         switch (current_char) {
+
         case closePeren:
-          if (stack.top() == openPeren) {
+          if (stack.size() > 0 && stack.top().second == openPeren)
             stack.pop();
-          } else {
-            print(unbalancedBracketError);
-            exit(0);
-          }
+          else
+            printBracketError(line_no, char_pos, current_char);
           break;
+
         case closeBrace:
-          if (stack.top() == openBrace) {
+          if (stack.size() > 0 && stack.top().second == openBrace)
             stack.pop();
-          } else {
-            print(unbalancedBracketError);
-            exit(0);
-          }
+          else
+            printBracketError(line_no, char_pos, current_char);
           break;
+
         case closeSquare:
-          if (stack.top() == openSquare) {
+          if (stack.size() > 0 && stack.top().second == openSquare)
             stack.pop();
-          } else {
-            print(unbalancedBracketError);
-            exit(0);
-          }
+          else
+            printBracketError(line_no, char_pos, current_char);
           break;
         }
       }
     }
   }
+
   if (stack.size() > 0) {
-    print(unbalancedBracketError);
-    exit(0);
+    printBracketError(stack);
   }
+}
+
+void Lexical::printBracketError(
+    std::stack<std::pair<std::string, char>> &stack) {
+  // reduce stack to first added bracket, only printing first error
+  while (stack.size() > 1) {
+    stack.pop();
+  }
+  //stack.top().first not currently working, might change to a struct rather than pair
+  std::cout << "\n***Error at " << stack.top().first << "\nReason: '"
+            << stack.top().second
+            << "' has no corresponding closer\nExiting program...";
+  exit(0);
+}
+
+void Lexical::printBracketError(const int l, const int cp, const char delim) {
+  std::cout << "\n***Error at " << l << "," << cp << "\nReason: '" << delim
+            << "' had no corresponding opener to close\nExiting program...";
+  exit(0);
 }
 
 void Lexical::print(const std::string arg) { std::cout << arg; }

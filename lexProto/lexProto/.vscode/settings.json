@@ -39,7 +39,9 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "deque": "cpp",
+        "stack": "cpp"
     },
     "terminal.explorerKind": "external"
 }

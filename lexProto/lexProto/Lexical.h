@@ -1,5 +1,7 @@
 #include "Token.h"
 #include <iostream>
+#include <stack>
+#include <utility>
 #include <vector>
 
 namespace Lexical {
@@ -9,6 +11,8 @@ std::vector<Token *> tokenise(const std::vector<char> &chars);
 void preScan(const std::vector<char> &chars);
 
 void print(const std::string arg);
+void printBracketError(std::stack<std::pair<std::string, char>> &stack);
+void printBracketError(const int l, const int cp, const char delim);
 
 bool isBracket(const char c);
 bool isDelim(const char c);
