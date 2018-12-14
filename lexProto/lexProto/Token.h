@@ -5,10 +5,10 @@ typedef enum { identifier, delim, keyword, op, logical_op, literal } TypeOf;
 
 class Token {
 public:
-  Token(const TypeOf tokenType, const std::string val, const int lineNum,
-        const int charPos);
+  Token(const TypeOf tokenType, const std::string val, const int lineNum, const int charPos);
 
-  
+  //TODO extend Token to identify data type or identifier type
+  //could create new Token classes that inheret from Token
 
   const TypeOf getTokenType();
   const std::string getVal();

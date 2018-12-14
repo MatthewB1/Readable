@@ -87,7 +87,6 @@ void Lexical::preScan(const std::vector<char> &chars) {
 
 bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
   //TODO extend for other delims " and ' (easy to do, but check for escape characters)
-  // for now, just make it work, later add good error messages
   int line_no = 0;
   int char_pos = 0;
   std::stack<std::pair<std::string, char>> stack;
@@ -102,7 +101,7 @@ bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
     }
     if (isBracket(current_char)) {
       if (current_char == openPeren || current_char == openBrace ||current_char == openSquare) {
-        stack.push(std::pair<std::string, char>(line_no + "," + char_pos, current_char));
+        stack.push(std::pair<std::string, char>(std::string(std::to_string(line_no) + "," + std::to_string(char_pos)), current_char));
       } else {
         // check top of stack for corresponding opening bracket
         switch (current_char) {
@@ -144,6 +143,7 @@ void Lexical::printBracketError(
     stack.pop();
   }
   //stack.top().first not currently working, might change to a struct rather than pair
+  //not actually sure it's storing it
   std::cout << "\n***Error at " << stack.top().first << "\nReason: '"
             << stack.top().second
             << "' has no corresponding closer\nExiting program...";
