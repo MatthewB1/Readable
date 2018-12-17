@@ -147,7 +147,7 @@ bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
 #define previous_token tokens[i - 1]
 
 void Lexical::checkIdentifierValidity(const std::vector<Token *> &tokens) {
-  
+//new comment
 }
 
 void Lexical::printBracketError(
