@@ -8,7 +8,9 @@ namespace Lexical {
 
 std::vector<Token *> tokenise(const std::vector<char> &chars);
 
-void preScan(const std::vector<char> &chars);
+
+bool bracketsBalanced(const std::vector<char> &chars);
+std::vector<std::string> hoistIdentifiers(const std::vector<char> &chars);
 
 void print(const std::string arg);
 void printBracketError(std::stack<std::pair<std::string, char>> &stack);
@@ -25,11 +27,5 @@ bool isKeyword(const std::string str);
  to check for valid syntax
  */
 bool isIdentifier(const std::string str);
-/*
-for this function I need to implement an algorithm to check for balanced
-brackets, I've seen a good implementation online that I referenced as a part of
-my information review, so will likely implement that
-*/
-bool bracketsBalanced(const std::vector<char> &chars);
 
 } // namespace Lexical

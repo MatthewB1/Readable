@@ -53,8 +53,8 @@ variables are dynamically typed, with syntax: var \<identifier\>;
 #### a variable instantiated but not given a value is undefined.
 ---
 
-## Complex types
-- Group (operates like a c-style struct)
+## ~~Complex types~~
+- ~~Group (operates like a c-style struct)~~
 
 ---
 
@@ -104,14 +104,14 @@ flip myFlag.        # Flip the current value
 
 ---
 
-## Group declaration
-- When declared inside of a group, members must state their type
+## ~~Group declaration~~
+- ~~When declared inside of a group, members must state their type~~
 ```
-group myGroup{
-number varOne;
-flag varTwo;
-text varThree;
-}
+~~group myGroup{~~
+~~number varOne;~~
+~~flag varTwo;~~
+~~text varThree;~~
+~~}~~
 ```
 
 ---
@@ -235,8 +235,8 @@ myNumber = myList[0];
 
 ##### while loop
 
-while expression {
-statement
+while (logical_expression) {
+//statement
 }
 
 

@@ -8,7 +8,7 @@
 std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
   // pre scan should do a run through to check for syntactical issues
 
-//hoistIdentifiers();
+//hoistIdentifiers(chars);
   bracketsBalanced(chars);
 
   /*if pre scan didn't cause the program to exit, we can assume the code
@@ -71,11 +71,11 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
   return tokens;
 }
 
-void Lexical::preScan(const std::vector<char> &chars) {
-  // bracketsBalanced(chars);
-  // then check for valid reference to identifiers?
-  // not sure how to go about doing this yet
-  // TODO ask chris
+std::vector<std::string> Lexical::hoistIdentifiers(const std::vector<char> &chars){
+  //run through code to find valid references to identifiers
+  //would it make sense to do this beforehand?
+  //could potentially do it after.
+
 }
 
 #define openPeren '('
@@ -84,8 +84,10 @@ void Lexical::preScan(const std::vector<char> &chars) {
 #define closeBrace '}'
 #define openSquare '['
 #define closeSquare ']'
+#define doubleQuote '\"'
+#define singleQuote '\'
 
-bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
+    bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
   //TODO extend for other delims " and ' (easy to do, but check for escape characters)
   int line_no = 0;
   int char_pos = 0;
