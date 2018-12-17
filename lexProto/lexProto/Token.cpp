@@ -28,7 +28,7 @@ const LiteralType LiteralToken::getLiteralType() { return this->literalType; }
 IdentifierToken::IdentifierToken(const TypeOf _tokenType,
                                  const IdentifierType _identifierType,
                                  const std::string _val, const int _lineNum,
-                                 const int _charPos, const int _argCount = NULL)
+                                 const int _charPos, const int _argCount)
     : Token::Token(_tokenType, _val, _lineNum, _charPos) {
   this->identifierType = _identifierType;
   this->argCount = _argCount;
