@@ -11,7 +11,8 @@
                 "utils.cpp",
                 "lexical.cpp",
                 "TreeNode.cpp",
-                "Token.cpp"
+                "Token.cpp",
+                "Comparisons.cpp"
             ],
             "group": {
                 "kind": "build",

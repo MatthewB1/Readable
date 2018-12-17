@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <fstream>
 
 #include "Lexical.h"

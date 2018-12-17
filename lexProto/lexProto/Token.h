@@ -1,7 +1,10 @@
 #include <memory>
 #include <string>
+#include <vector>
 
 typedef enum { identifier, delim, keyword, op, logical_op, literal } TypeOf;
+
+typedef enum { number, string, boolean, list } LiteralType;
 
 class Token {
 public:
@@ -16,6 +19,12 @@ public:
   const int getLine();
   const int getCharPos();
 
+  virtual const LiteralType getLiteralType();
+
+  // static const std::vector<std::string> getKeywords(){
+  //   return KEYWORDS;
+  // }
+
 private:
   TypeOf tokenType;
   std::string val;
@@ -23,14 +32,12 @@ private:
   int charPos;
 };
 
-typedef enum { number, string, boolean, list } LiteralType;
-
 class LiteralToken : public Token {
 public:
   LiteralToken(const TypeOf tokenType, const LiteralType literalType,
                const std::string val, const int lineNum, const int charPos);
 
-  const LiteralType getLiteralType();
+  virtual const LiteralType getLiteralType();
 
 private:
   LiteralType literalType;

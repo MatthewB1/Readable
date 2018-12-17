@@ -1,5 +1,6 @@
 var x = 3;
 var y = 9;
+var str = "test\)";
 if (x == 3){
     y = 7;
 }

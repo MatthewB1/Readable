@@ -60,7 +60,14 @@ void Utils::printTokens(const std::vector<Token *> &vec) {
       std::cout << "undefined:  ";
       break;
     }
-    std::cout << vec[i]->getVal() << std::endl;
+    std::cout << vec[i]->getVal();
+
+  if (vec[i]->getTokenType() == 5){
+    std::cout << vec[i]->getLiteralType();
+  }
+
+
+    std::cout << std::endl;
   }
   std::cout << "}";
 }
