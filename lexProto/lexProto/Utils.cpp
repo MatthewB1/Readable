@@ -28,7 +28,6 @@ void Utils::printTokens(const std::vector<Token *> &vec) {
   for (size_t i = 0; i < vec.size(); i++) {
     /*
     it's obvious that formatting could be improved
-    and it's also obvious that I could format it smarter than I'm doing here
     */
     std::cout << "\t" << vec[i]->getLine() << "," << vec[i]->getCharPos();
     if (vec[i]->getLine() < 10)
@@ -38,36 +37,49 @@ void Utils::printTokens(const std::vector<Token *> &vec) {
     std::cout << "- ";
     // switch through tokenType enum to get name of value
     switch (vec[i]->getTokenType()) {
-    case 0:
+    case identifier:
       std::cout << "identifier: ";
       break;
-    case 1:
+    case delim:
       std::cout << "delimiter:  ";
       break;
-    case 2:
+    case keyword:
       std::cout << "keyword:    ";
       break;
-    case 3:
+    case op:
       std::cout << "operator:   ";
       break;
-    case 4:
+    case logical_op:
       std::cout << "logical_op: ";
       break;
-    case 5:
+    case literal:
       std::cout << "literal:    ";
       break;
     default:
       std::cout << "undefined:  ";
       break;
     }
-    std::cout << vec[i]->getVal();
+  
+    if (vec[i]->getTokenType() == literal) {
+      switch (vec[i]->getLiteralType()) {
+      case number:
+        std::cout << "number:  ";
+        break;
+      case string:
+        std::cout << "string:  ";
+        break;
+      case boolean:
+        std::cout << "boolean: ";
+        break;
+      case list:
+        std::cout << "list:    ";
+        break;
+      default:
+        std::cout << "undefined";
+      }
+    }
 
-  if (vec[i]->getTokenType() == 5){
-    std::cout << vec[i]->getLiteralType();
-  }
-
-
-    std::cout << std::endl;
+    std::cout << vec[i]->getVal() << std::endl;
   }
   std::cout << "}";
 }

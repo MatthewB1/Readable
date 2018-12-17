@@ -1,4 +1,4 @@
-var x = 3;
+var x = true;
 var y = 9;
 var str = "test\)";
 if (x == 3){

@@ -26,11 +26,8 @@ bool Comparisons::isLogicalOp(const std::string str) {
 }
 
 bool Comparisons::isKeyword(const std::string str) {
-  std::for_each(keywords.begin(), keywords.end(), [str](auto key) {
-    if (key == str) {
-      return true;
-    }
-  });
+  if (std::find(Comparisons::keywords.begin(), Comparisons::keywords.end(),
+                str) != Comparisons::keywords.end()) {return true;}
   return false;
 }
 
@@ -45,12 +42,11 @@ bool Comparisons::isLiteral(const std::string str) {
 }
 
 bool Comparisons::strIsNumericLiteral(const std::string str) {
-//iterates through a string, if any character is numeric 
-  std::for_each(str.begin(), str.end(), [](auto c) {
-    if (!isdigit(c)) {
+//iterates through a string, if any character is not numeric, return false
+  for (char c : str){
+    if (!isdigit(c))
       return false;
-    }
-  });
+  }
   return true;
 }
 
@@ -64,4 +60,33 @@ bool Comparisons::strIsStrLiteral(const std::string str) {
   if (str[0] == '\"' && str.back() == '\"')
     return true;
   return false;
+}
+
+bool Comparisons::isIdentifier(const std::string str) {
+  /*
+  following (most of) the c++ rules on identifier naming:
+
+  1. Only Alphabets,Digits and Underscores are permitted.
+  2. Identifier name cannot start with a digit.
+  3. Key words cannot be used as a name.
+  4. Upper case and lower case letters are distinct.
+  */
+
+  if (isKeyword(str)) {
+    // keywords cannot be used as identifier
+    return false;
+  }
+
+  // if the first character is a digit, it's not a valid identifier
+  if (isdigit(str[0]))
+    return false;
+
+  for (auto c : str) {
+    //if a character is NOT, an underscore, digit, or alphabet character
+    if (!(int(c) == 95 || (int(c) >= 48 && int(c) <= 57) ||
+          (tolower(c) >= 97 && tolower(c) <= 122)))
+      return false;
+  }
+
+  return true;
 }

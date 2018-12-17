@@ -4,7 +4,9 @@
 
 typedef enum { identifier, delim, keyword, op, logical_op, literal } TypeOf;
 
-typedef enum { number, string, boolean, list } LiteralType;
+typedef enum { number, string, boolean, list, nullLiteral} LiteralType;
+
+typedef enum { variable, function, nullIdentifier } IdentifierType;
 
 class Token {
 public:
@@ -19,11 +21,10 @@ public:
   const int getLine();
   const int getCharPos();
 
+  //virtual functions
   virtual const LiteralType getLiteralType();
-
-  // static const std::vector<std::string> getKeywords(){
-  //   return KEYWORDS;
-  // }
+  virtual const IdentifierType getIdentifierType();
+  virtual const int getArgCount();
 
 private:
   TypeOf tokenType;
@@ -43,17 +44,19 @@ private:
   LiteralType literalType;
 };
 
-typedef enum { variable, function } IdentifierType;
 //not sure about this, may split into variable and function identifiers
 //potential problems with identifying list variables?
 class IdentifierToken : public Token {
 public:
   IdentifierToken(const TypeOf tokenType, const IdentifierType identifierType,
                   const std::string val, const int lineNum, const int charPos,
-                  const int argCount = NULL);
+                  const int argCount);
 
-  const IdentifierType getIdentifierType();
-  const int getArgCount();
+  virtual const IdentifierType getIdentifierType();
+  virtual const int getArgCount();
+
+  void setIdentifierType(const IdentifierType IdentifierType);
+  void setArgCount(const int argCount);
 
 private:
   IdentifierType identifierType;

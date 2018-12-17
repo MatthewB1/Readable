@@ -41,7 +41,8 @@
         "xutility": "cpp",
         "iterator": "cpp",
         "deque": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "cctype": "cpp"
     },
     "terminal.explorerKind": "external"
 }

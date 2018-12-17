@@ -13,8 +13,10 @@ const std::string Token::getVal() { return this->val; }
 const int Token::getLine() { return this->lineNum; }
 const int Token::getCharPos() { return this->charPos; }
 
-//why can't i return null :(
-const LiteralType LiteralToken::getLiteralType() { return NULL; }
+//virtual functions
+const LiteralType Token::getLiteralType() { return nullLiteral; }
+const IdentifierType Token::getIdentifierType() { return nullIdentifier; }
+const int Token::getArgCount() { return NULL; }
 
 //----------------------LiteralToken Implementaton-----------------------
 LiteralToken::LiteralToken(const TypeOf _tokenType,
