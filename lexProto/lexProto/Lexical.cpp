@@ -20,8 +20,12 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
 
   // each time we iterate through, also increment char_pos
   for (auto i = 0; i < chars.size(); i++, char_pos++) {
-    //ignore a delimiter that is preceded by an escape character
-    if (newLine && prev_char != '\\') {
+    if (newLine) {
+      //if there is untokenised code when starting a new line
+      //print error and exit program
+      if (current_str != "") {
+        printTokenisationError(current_str, line_no, char_pos);
+      }
       line_no++;
       char_pos = 0;
       current_str.clear();
@@ -29,46 +33,50 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
     }
 
     if (space || (Comparisons::isDelim(current_char) && prev_char != '\\')) {
-      //if previous character was also a space, we don't need to run the rest of the logic
-      if (current_str != "") {
-        // should be end of token, we should do checks and create the new token
-        if (Comparisons::isKeyword(current_str)){
-          tokens.push_back(new Token(keyword, current_str, line_no, char_pos));
-          current_str.clear();
+      if (!Comparisons::isUnfString(current_str)) {
+        // if previous character was also a space, we don't need to run the rest
+        // of the logic
+        if (current_str != "") {
+          // should be end of token, we should do checks and create the new
+          // token
+          if (Comparisons::isKeyword(current_str)) {
+            tokens.push_back(
+                new Token(keyword, current_str, line_no, char_pos));
+            current_str.clear();
+          } else if (Comparisons::isOp(current_str)) {
+            tokens.push_back(new Token(op, current_str, line_no, char_pos));
+            current_str.clear();
+          } else if (Comparisons::isLogicalOp(current_str)) {
+            tokens.push_back(
+                new Token(logical_op, current_str, line_no, char_pos));
+            current_str.clear();
+          } else if (Comparisons::isLiteral(current_str)) {
+            tokens.push_back(
+                createLiteralToken(current_str, line_no, char_pos));
+            current_str.clear();
+          } else if (Comparisons::isIdentifier(current_str)) {
+            tokens.push_back(
+                createIdentifierToken(current_str, line_no, char_pos));
+            current_str.clear();
+          }
+          // if nothing else picks it up, it's an invalid token
+          // print the error and exit the program
+          else
+            printTokenisationError(current_str, line_no, char_pos);
         }
-        else if (Comparisons::isOp(current_str)){
-          tokens.push_back(new Token(op, current_str, line_no, char_pos));
-          current_str.clear();
+        if (Comparisons::isDelim(current_char) && prev_char != '\\') {
+          tokens.push_back(new Token(delim, std::string(1, current_char),
+                                     line_no, char_pos));
         }
-        else if (Comparisons::isLogicalOp(current_str)) {
-          tokens.push_back(new Token(logical_op, current_str, line_no, char_pos));
-          current_str.clear();
-        }
-        else if (Comparisons::isLiteral(current_str)){
-          tokens.push_back(createLiteralToken(current_str, line_no, char_pos));
-          current_str.clear();
-        }
-        else if (Comparisons::isIdentifier(current_str)){
-          tokens.push_back(createIdentifierToken(current_str, line_no, char_pos));
-          current_str.clear();
-        }
-        //if nothing else picks it up, it's an invalid token
-        //print the error and exit the program
-        else
-          printTokenisationError(current_str, line_no, char_pos);
+        current_str.clear();
+        continue;
       }
-      if (Comparisons::isDelim(current_char) && prev_char != '\\') {
-        tokens.push_back(
-            new Token(delim, std::string(1, current_char), line_no, char_pos));
-      }
-      current_str.clear();
-      continue;
     }
     // if nothing else, add char to the current string
     current_str += current_char;
   }
 
-  //after tokenisation, do checks for valid references to identifiers
+  // after tokenisation, do checks for valid references to identifiers
   checkIdentifierValidity(tokens);
 
   return tokens;
@@ -143,13 +151,6 @@ bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
   }
 }
 
-#define current_token tokens[i]
-#define previous_token tokens[i - 1]
-
-void Lexical::checkIdentifierValidity(const std::vector<Token *> &tokens) {
-//new comment
-}
-
 void Lexical::printBracketError(
     std::stack<std::pair<std::string, char>> &stack) {
   // reduce stack to first added bracket, only printing first error
@@ -161,9 +162,80 @@ void Lexical::printBracketError(
   exit(0);
 }
 
-void Lexical::printBracketError(const int l, const int cp, const char delim) {
-  std::cout << "\n***Error at " << l << "," << cp << "\nReason: '" << delim
+void Lexical::printBracketError(const int line_no, const int char_pos, const char delim) {
+  std::cout << "\n***Error at " << line_no << "," << char_pos << "\nReason: '" << delim
             << "' does not match last opening delimiter...\nExiting program...";
+  exit(0);
+}
+
+#define current_token tokens[i]
+#define previous_token tokens[i - 1]
+
+void Lexical::checkIdentifierValidity(const std::vector<Token *> &tokens) {
+  std::vector<Token *> validIdentifiers;
+
+  for (int i = 0; i < tokens.size(); i++){
+    Token * currenttoken = current_token;
+    //only running logic on identifier tokens
+    if (current_token->getTokenType() == identifier){
+      //if token is preceded by keyword "var" or "function" it is a decleration
+      if (previous_token->getVal() == "var" || previous_token->getVal() == "function"){
+        //if the identifer decleration is not already in the list, add it
+        if (!vecContainsIdentifier(current_token, validIdentifiers)) {
+          if (previous_token->getVal() == "var"){
+            current_token->setIdentifierType(variable);
+          }
+          else{
+            current_token->setIdentifierType(function);
+            //TODO set arg count here!!!!
+          }
+            validIdentifiers.push_back(current_token);
+        }
+        else{
+          //if the identifier decleration IS already in the vector
+          //this identifer has previously been defined, so throw an error
+          printIdentifierError(current_token, multiple_declaration);
+        }
+      }
+      //if it is not preceded by those keywords, it's a reference
+      else {
+        //if the vector of valid identifiers does not contain the token
+        //print an error and exit
+        if (!vecContainsIdentifier(current_token, validIdentifiers)) {
+          printIdentifierError(current_token, invalid_reference);
+        }
+      }
+    }
+  }
+
+}
+
+bool Lexical::vecContainsIdentifier(Token* token, const std::vector<Token *> &vec){
+    for (auto identifier : vec){
+      if (token->getVal() == identifier->getVal()){
+        token->setIdentifierType(identifier->getIdentifierType());
+        token->setArgCount(identifier->getArgCount());
+        return true;
+      }
+    }
+    return false;
+}
+
+void Lexical::printIdentifierError(Token *const token, const identifierErrors error) {
+  std::cout << "\n***Error at " << token->getLine() << "," << token->getCharPos() << "\nReason:";
+  switch (error) {
+  case invalid_reference: {
+    std::cout << " invalid reference to identifier \'" << token->getVal()
+              << "\' - no definition found";
+    break;
+  }
+  case multiple_declaration: {
+    std::cout << "Identifier \'" << token->getVal()
+              << "\' already defined earlier in the program";
+    break;
+  }
+  }
+  std::cout << "\nExiting program...";
   exit(0);
 }
 
@@ -191,7 +263,6 @@ LiteralToken* Lexical::createNumericLiteralToken(const std::string str,
 }
 LiteralToken* Lexical::createStrLiteralToken(const std::string str, const int line_no,
                                              const int char_pos) {
-  //TODO handle removing escape characters?
   return new LiteralToken(literal, string, str, line_no, char_pos);
 }
 

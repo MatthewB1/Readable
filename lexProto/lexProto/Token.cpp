@@ -17,6 +17,13 @@ const int Token::getCharPos() { return this->charPos; }
 const LiteralType Token::getLiteralType() { return nullLiteral; }
 const IdentifierType Token::getIdentifierType() { return nullIdentifier; }
 const int Token::getArgCount() { return NULL; }
+void Token::setIdentifierType(const IdentifierType _identifierType) {}
+void Token::setArgCount(const int _argCount) {}
+
+
+
+
+
 
 //----------------------LiteralToken Implementaton-----------------------
 LiteralToken::LiteralToken(const TypeOf _tokenType,
@@ -29,7 +36,13 @@ LiteralToken::LiteralToken(const TypeOf _tokenType,
 
 const LiteralType LiteralToken::getLiteralType() { return this->literalType; }
 
-//----------------------------------------------------------------------
+
+
+
+
+
+
+//----------------------IdentifierToken Implementation----------------------
 IdentifierToken::IdentifierToken(const TypeOf _tokenType,
                                  const IdentifierType _identifierType,
                                  const std::string _val, const int _lineNum,
@@ -41,3 +54,10 @@ IdentifierToken::IdentifierToken(const TypeOf _tokenType,
 
 const IdentifierType IdentifierToken::getIdentifierType() {return this->identifierType;}
 const int IdentifierToken::getArgCount() { return this->argCount; }
+
+void IdentifierToken::setIdentifierType(const IdentifierType _identifierType) {
+  this->identifierType = _identifierType;
+}
+void IdentifierToken::setArgCount(const int _argCount){
+  this->argCount = _argCount;
+}

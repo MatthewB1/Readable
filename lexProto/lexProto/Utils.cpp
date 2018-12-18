@@ -1,6 +1,9 @@
 #include "Utils.h"
 
 std::vector<char> Utils::readFile(std::string path) {
+/*
+Reads in from a file, returns a vector of characters ready to be processed.
+*/
   std::ifstream file(path);
   std::vector<char> buffer;
   if (file) {
@@ -24,6 +27,12 @@ std::vector<char> Utils::readFile(std::string path) {
 }
 
 void Utils::printTokens(const std::vector<Token *> &vec) {
+/*
+This function prints out the tokens,
+formatting them through switch cases depending on token type
+it's a horrendous function to read but I think that's fine for now.
+*/
+
   std::cout << "Tokens: {\n";
   for (size_t i = 0; i < vec.size(); i++) {
     /*
@@ -79,7 +88,21 @@ void Utils::printTokens(const std::vector<Token *> &vec) {
       }
     }
 
-    std::cout << vec[i]->getVal() << std::endl;
+    std::cout << vec[i]->getVal();
+
+    if (vec[i]->getTokenType() == identifier && vec[i- 1]->getTokenType() == keyword) {
+      if (vec[i]->getIdentifierType() == function) {
+        switch (vec[i]->getArgCount()) {
+        case NULL:
+          std::cout << "\tno. of args: NULL";
+          break;
+        default:
+          std::cout << "\tno.of args: " << vec[i]->getArgCount();
+        }
+      }
+    }
+
+    std::cout << std::endl;
   }
   std::cout << "}";
 }

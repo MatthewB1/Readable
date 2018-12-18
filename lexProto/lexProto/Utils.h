@@ -16,6 +16,4 @@ std::vector<char> readFile(std::string path);
 
 void print(std::string arg);
 
-// TreeNode<Token> parse(const std::vector<std::string>& tokens);
-
 } // namespace Utils

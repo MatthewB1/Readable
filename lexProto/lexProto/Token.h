@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+//enumdefinitions
+
 typedef enum { identifier, delim, keyword, op, logical_op, literal } TypeOf;
 
 typedef enum { number, string, boolean, list, nullLiteral} LiteralType;
@@ -13,9 +15,6 @@ public:
   Token(const TypeOf tokenType, const std::string val, const int lineNum,
         const int charPos);
 
-  // TODO extend Token to identify data type or identifier type
-  // could create new Token classes that inheret from Token
-
   const TypeOf getTokenType();
   const std::string getVal();
   const int getLine();
@@ -25,6 +24,8 @@ public:
   virtual const LiteralType getLiteralType();
   virtual const IdentifierType getIdentifierType();
   virtual const int getArgCount();
+  virtual void setIdentifierType(const IdentifierType IdentifierType);
+  virtual void setArgCount(const int argCount);
 
 private:
   TypeOf tokenType;
@@ -55,8 +56,8 @@ public:
   virtual const IdentifierType getIdentifierType();
   virtual const int getArgCount();
 
-  void setIdentifierType(const IdentifierType IdentifierType);
-  void setArgCount(const int argCount);
+  virtual void setIdentifierType(const IdentifierType IdentifierType);
+  virtual void setArgCount(const int argCount);
 
 private:
   IdentifierType identifierType;
