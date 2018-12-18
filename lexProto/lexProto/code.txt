@@ -1,12 +1,7 @@
-var x = 3;
-var y = 9;
+var y;
 
-if (x == 3){
-    y = 7;
+function setY(var y,  var c){
+    y = a;
 }
 
-function printNum(var a){
-    var d = a;
-}
-
-printNum(y);
+setY(a);

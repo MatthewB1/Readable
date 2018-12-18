@@ -13,7 +13,9 @@ void checkIdentifierValidity(const std::vector<Token *> &tokens);
 
 bool vecContainsIdentifier(Token * token, const std::vector<Token *> &vec);
 
-typedef enum { invalid_reference, multiple_declaration } identifierErrors;
+int findArgCount(Token * token, const std::vector<Token *> &vec, int index);
+
+typedef enum { invalid_reference, multiple_declaration, invalid_decleration } identifierErrors;
 
 void printBracketError(std::stack<std::pair<std::string, char>> &stack);
 void printBracketError(const int line_no, const int char_pos, const char delim);

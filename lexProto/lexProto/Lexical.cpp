@@ -24,7 +24,8 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
       //if there is untokenised code when starting a new line
       //print error and exit program
       if (current_str != "") {
-        printTokenisationError(current_str, line_no, char_pos);
+        printTokenisationError(current_str, line_no,
+                               char_pos - current_str.size());
       }
       line_no++;
       char_pos = 0;
@@ -41,28 +42,30 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
           // token
           if (Comparisons::isKeyword(current_str)) {
             tokens.push_back(
-                new Token(keyword, current_str, line_no, char_pos));
+                new Token(keyword, current_str, line_no, char_pos - current_str.size()));
             current_str.clear();
           } else if (Comparisons::isOp(current_str)) {
-            tokens.push_back(new Token(op, current_str, line_no, char_pos));
+            tokens.push_back(new Token(op, current_str, line_no,
+                                       char_pos - current_str.size()));
             current_str.clear();
           } else if (Comparisons::isLogicalOp(current_str)) {
-            tokens.push_back(
-                new Token(logical_op, current_str, line_no, char_pos));
+            tokens.push_back(new Token(logical_op, current_str, line_no,
+                                       char_pos - current_str.size()));
             current_str.clear();
           } else if (Comparisons::isLiteral(current_str)) {
-            tokens.push_back(
-                createLiteralToken(current_str, line_no, char_pos));
+            tokens.push_back(createLiteralToken(current_str, line_no,
+                                                char_pos - current_str.size()));
             current_str.clear();
           } else if (Comparisons::isIdentifier(current_str)) {
-            tokens.push_back(
-                createIdentifierToken(current_str, line_no, char_pos));
+            tokens.push_back(createIdentifierToken(
+                current_str, line_no, char_pos - current_str.size()));
             current_str.clear();
           }
           // if nothing else picks it up, it's an invalid token
           // print the error and exit the program
           else
-            printTokenisationError(current_str, line_no, char_pos);
+            printTokenisationError(current_str, line_no,
+                                   char_pos - -current_str.size());
         }
         if (Comparisons::isDelim(current_char) && prev_char != '\\') {
           tokens.push_back(new Token(delim, std::string(1, current_char),
@@ -98,8 +101,8 @@ void Lexical::printTokenisationError(const std::string str, const int line_no,
 #define closeSquare ']'
 
 bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
-  int line_no = 0;
-  int char_pos = 0;
+  int line_no = 1;
+  int char_pos = 1;
   std::stack<std::pair<std::string, char>> stack;
 
   for (int i = 0; i < chars.size(); i++, char_pos++) {
@@ -187,7 +190,7 @@ void Lexical::checkIdentifierValidity(const std::vector<Token *> &tokens) {
           }
           else{
             current_token->setIdentifierType(function);
-            //TODO set arg count here!!!!
+            current_token->setArgCount(findArgCount(current_token, tokens, i));
           }
             validIdentifiers.push_back(current_token);
         }
@@ -221,24 +224,42 @@ bool Lexical::vecContainsIdentifier(Token* token, const std::vector<Token *> &ve
     return false;
 }
 
+int Lexical::findArgCount(Token *token, const std::vector<Token *> &vec,
+                           int index) {
+  int argCount = 0;
+  index++;
+  //if function declaration is not followed by open perentheses, print an error and exit
+  if (vec[index]->getVal() != "(") {
+    printIdentifierError(token, invalid_decleration);
+  }
+  while (vec[index]->getVal() != ")"){
+    if (vec[index]->getVal() == "var" && vec[index + 1]->getTokenType() == identifier){
+      argCount++;
+    }
+    index++;
+  }
+  return argCount;
+}
+
 void Lexical::printIdentifierError(Token *const token, const identifierErrors error) {
   std::cout << "\n***Error at " << token->getLine() << "," << token->getCharPos() << "\nReason:";
   switch (error) {
-  case invalid_reference: {
+  case invalid_reference:
     std::cout << " invalid reference to identifier \'" << token->getVal()
               << "\' - no definition found";
     break;
-  }
-  case multiple_declaration: {
+
+  case multiple_declaration:
     std::cout << "Identifier \'" << token->getVal()
               << "\' already defined earlier in the program";
     break;
-  }
+  default:
+    std::cout << "none";
+    break;
   }
   std::cout << "\nExiting program...";
   exit(0);
 }
-
 
 //Literal Token creation-----------------------------------------------------------
 LiteralToken* Lexical::createLiteralToken(const std::string str, const int line_no,
