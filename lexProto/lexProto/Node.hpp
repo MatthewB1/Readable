@@ -1,5 +1,3 @@
-
-
 // class definition
 
 template <typename T> class Node {
