@@ -25,12 +25,12 @@ These words have predefined meanings that are used by the compiler and thus cann
 - return
 - flip
 - function
-- ~~group
+- ~~group~~
 
 ---
 
-## ~~Comments
-- Anything interpreted by the compiler as a comment will not be executed as a part of the program.
+## ~~Comments~~
+- ~~Anything interpreted by the compiler as a comment will not be executed as a part of the program.~~
 ```
 ```
 ---
