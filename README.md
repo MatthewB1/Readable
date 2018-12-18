@@ -25,21 +25,14 @@ These words have predefined meanings that are used by the compiler and thus cann
 - return
 - flip
 - function
-- group
-- list
+- ~~group
 
 ---
 
-## Comments
+## ~~Comments
 - Anything interpreted by the compiler as a comment will not be executed as a part of the program.
 ```
-// This is a single-line comment
-
-/*
-this is a multi-line comment
-*/
 ```
-
 ---
 
 ## Data types
@@ -66,15 +59,10 @@ variables are dynamically typed, with syntax: var \<identifier\>;
 ## Variable declaration
 - When declared outside of a group, variables are dynamically declared with the "var" key word
 ```
-var aVar;  //undefined?
-var myNumb = 10;
+var aVar;  //undefined
+var myNumb = 10; 
 var myText = "Hello, World!";
-var myFlag = true;
-```
-- Casting is supported upon assigning from a variable
-```
-myNumb = 10;
-toText = (text)myNumb;
+var myBool = true;
 ```
 
 ---
@@ -83,7 +71,7 @@ toText = (text)myNumb;
 
 #### numbers
 ```
-let myNumber = 10;
+var myNumber = 10;
 
 nyNumber += 10;    # Addition
 myNumber -= 5;     # Subtraction
@@ -95,10 +83,10 @@ myNumber %= 3;	   # Modulus
 #### bools
 - keyword 'flip' followed by a bool variable inverts the current state of the bool
 ```
-myFlag = true.
+var myFlag = true;
 
-myFlag = false.    # Assign a value
-flip myFlag.        # Flip the current value
+myFlag = false;    # Assign a value
+flip myFlag;        # Flip the current value
 ```
 
 
@@ -107,29 +95,24 @@ flip myFlag.        # Flip the current value
 ## ~~Group declaration~~
 - ~~When declared inside of a group, members must state their type~~
 ```
-~~group myGroup{~~
-~~number varOne;~~
-~~flag varTwo;~~
-~~text varThree;~~
-~~}~~
 ```
 
 ---
 
 ## Equality and inequality checking
 - Checking is done with if keyword
-- Scoping logic within brackets is not required, but is valid
+- Expression to be evaluated contained within parentheses
 ```
-if myVar == 10{
-# do code
+if (myVar == 10){
+//do code
 }
 
 if (myVar == 10 && otherLogic()){
-# do code
+// do code
 }
 
-if myVar != 10{
-# do code
+if (myVar != 10){
+//do code
 }
 ```
 
@@ -138,14 +121,14 @@ if myVar != 10{
 ## Printing
 
 - printing is done with the print keyword.
-- Arguments are concatonated and separated with a space.
-- it is not required to surround the print arguments with brackets, but it is valid
+- Arguments are concatonated and separated with a comma
+- Literals or identifiers can be passed as arguments
 
 ```
-print "Hello world!".
+print("Hello world!");
 
-let age = 10.
-print "Jimmy was " age " years old".
+var age = 10;
+print("Jimmy was ",age ," years old");
 ```
 
 ---
@@ -164,23 +147,26 @@ myFunction();
 ```
 
 #### With parameters
+- variables are instantiated in the function declaration, so keyword 'var'is required
 ```
 # Declaring a function with parameters
-function myFunctionWithParams a, b{
+function myFunctionWithParams (var a, var b){
 //statement
 }
 
 # calling a function with parameters
-let myNumb = 10;
+var myNumb = 10;
 myFunction(myNumb,"argument!");
 ```
 
 ---
 
 ## Returning
-- return types do not need to be declared, but if they, the value returned from a function is cast to the stated data type
+- return types do not need to be declared
 
-function returnSeven 
+function returnSeven(){
+return 7;
+}
 
 ---
 
@@ -209,17 +195,17 @@ var list = [];
 #### Adding items to the end of a list
 ```
 list += 5;
-list push 5;
+list.push(5);
 ```
 
 #### Removing items from the list
 ```
-mylist remove 7;
+mylist.remove(7);
 ```
 
 #### Checking list contents
 ```
-if myList contains 10{
+if (myList.contains(10){
 //statement
 }
 ```
