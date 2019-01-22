@@ -21,11 +21,13 @@ template <typename T> TreeNode<T>::~TreeNode() {
 
 template <typename T> void TreeNode<T>::setLeft(const TreeNode<T> *const left) {
   this->left = left;
+  left->setParent(this);
 }
 
 template <typename T>
 void TreeNode<T>::setRight(const TreeNode<T> *const right) {
   this->right = right;
+  right->setParent(this);
 }
 
 template <typename T>
@@ -54,8 +56,8 @@ template <typename T> TreeNode<T> *TreeNode<T>::getTopOfTree(){
   }
 }
 
-template <typename T> int TreeNode<T>::getTreeDepth() {
-  return getTopOfTree()->getDepthFromNode();
+template <typename T> int TreeNode<T>::getTreeHeight() {
+  return (getTopOfTree()->getDepthFromNode() + 1);
 }
 
 template <typename T> int TreeNode<T>::getDepthOfNode() {
@@ -79,7 +81,27 @@ template <typename T> int TreeNode<T>::getDepthOfNode() {
 
 template <typename T> int TreeNode<T>::getDepthFromNode() {
   // research algorithms for efficient tree traversal to find max depth
-  return 0;
+  if (left == nullptr && right == nullptr)
+    return 0;
+  else
+    {
+      int lDepth, rDepth;
+
+      if (left != nullptr)
+        lDepth = getDepthFromNode(left);
+      else
+        lDepth = 0;
+        
+      if (right != nullptr)
+        rDepth = getDepthFromNode(right);
+      else
+        rDepth = 0;
+
+    if (lDepth > rDepth)
+      return (lDepth + 1);
+    else
+      return (rDepth + 1);
+    }
 }
 
 template <typename T> int TreeNode<T>::getChildCount() {

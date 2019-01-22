@@ -21,7 +21,7 @@ public:
   TreeNode<T> *getParent();
   TreeNode<T> *getTopOfTree();
 
-  int getTreeDepth();
+  int getTreeHeight();
   int getDepthOfNode();
   int getDepthFromNode();
 

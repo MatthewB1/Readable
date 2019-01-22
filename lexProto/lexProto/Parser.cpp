@@ -24,7 +24,7 @@ std::vector<TreeNode<Token *> *> Parser::parse(const std::vector<Token *> &token
     For now I want to approach parsing these simple statements. Before moving on to more complex things.
   */
 
- //expressions will hold pointers to the top of each expression tree
+ //trees vector will hold pointers to the top of each tree
  std::vector<TreeNode<Token *> *> trees;
  std::vector<Token *> current_statement;
 
@@ -51,5 +51,7 @@ void Parser::evaluateStatement(const std::vector<Token *> &statement){
 
     //at this point we need to see if the expression is valid
     //potentially build regular expressions
+
+
 
 }
