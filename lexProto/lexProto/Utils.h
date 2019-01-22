@@ -1,19 +1,14 @@
 #include <fstream>
 
-#include "Lexical.h"
-#include "TreeNode.hpp"
+#include "Parser.h"
 namespace Utils {
-
-template <typename T> void printVec(const T &v) {
-  std::cout << "\n";
-  std::for_each(v.cbegin(), v.cend(), [](auto o) { std::cout << o; });
-  std::cout << "\n";
-}
-
-void printTokens(const std::vector<Token *> &vec);
 
 std::vector<char> readFile(std::string path);
 
-void print(std::string arg);
+void printCode(const std::vector<char> &code);
+
+void printTokens(const std::vector<Token *> &vec);
+
+void visualiseProgram(const std::vector<TreeNode<Token *> *> &expressions);
 
 } // namespace Utils

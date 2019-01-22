@@ -42,7 +42,9 @@
         "iterator": "cpp",
         "deque": "cpp",
         "stack": "cpp",
-        "cctype": "cpp"
+        "cctype": "cpp",
+        "map": "cpp",
+        "xtree": "cpp"
     },
     "terminal.explorerKind": "external"
 }

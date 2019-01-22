@@ -1,7 +1,1 @@
-var y;
-
-function setY(var y,  var c){
-    y = a;
-}
-
-setY(a);
+var y = 3;

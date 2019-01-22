@@ -19,6 +19,7 @@ public:
   TreeNode<T> *getLeft();
   TreeNode<T> *getRight();
   TreeNode<T> *getParent();
+  TreeNode<T> *getTopOfTree();
 
   int getTreeDepth();
   int getDepthOfNode();

@@ -39,20 +39,23 @@ template <typename T> TreeNode<T> *TreeNode<T>::getRight() { return right; }
 
 template <typename T> TreeNode<T> *TreeNode<T>::getParent() { return parent; }
 
-template <typename T> int TreeNode<T>::getTreeDepth() {
-  // if already at head, return depth
+template <typename T> TreeNode<T> *TreeNode<T>::getTopOfTree(){
+  //if there's no parent, this is the top node
   if (parent == nullptr)
-    return getDepthFromNode();
-  // else, find head, then return depth
-  else {
+    return this;
+  else{
     TreeNode *tempnode = parent;
-    // traverse all the way up the tree
-    while (tempnode->parent != nullptr) {
+    //while parent of tempnode exists, change tempnode pointer to parent
+    while (tempnode->parent != nullptr){
       tempnode = tempnode->parent;
     }
-    // return depth from head
-    return tempnode->getDepthFromNode();
+    //when tempnode has no parent, it's the top node, return it
+    return tempnode;
   }
+}
+
+template <typename T> int TreeNode<T>::getTreeDepth() {
+  return getTopOfTree()->getDepthFromNode();
 }
 
 template <typename T> int TreeNode<T>::getDepthOfNode() {
