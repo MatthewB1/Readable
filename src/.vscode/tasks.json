@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build main",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "Comparisons.cpp",
+                "lexical.cpp",
+                "main.cpp",
+                "Node.h",
+                "parser.cpp",
+                "Token.cpp",
+                "TreeNode.h",
+                "utils.cpp",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
