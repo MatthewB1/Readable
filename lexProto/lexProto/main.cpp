@@ -25,10 +25,5 @@ int main() {
   I would like to visually represent the expression trees here
   */
 
-
-
-
-  
-
   return 0;
 }

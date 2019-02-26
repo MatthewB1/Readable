@@ -1,10 +1,16 @@
 
 #include "Lexical.h"
-#include "TreeNode.hpp"
+#include "TreeNode.h"
 
 namespace Parser {
 
 std::vector<TreeNode<Token *> *> parse(const std::vector<Token *> &tokens);
 
-void evaluateStatement(const std::vector<Token *> &statement);
+TreeNode<Token *> * evaluateStatement(const std::vector<Token *> &statement);
+
+TreeNode<Token *> *evaluateKeywordStatement(const std::vector<Token *> &statement);
+
+TreeNode<Token *> *evaluateExpression(const std::vector<Token *> &expression);
+
+void errorEvaluatingStatement();
 }
