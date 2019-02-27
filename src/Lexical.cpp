@@ -5,7 +5,7 @@
 #define newLine current_char == '\n'
 #define space current_char == ' '
 
-std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
+std::vector<std::shared_ptr<Token>> Lexical::tokenise(const std::vector<char> &chars) {
   // pre scan should do a run through to check for syntactical issues
 
   bracketsBalanced(chars);
@@ -15,7 +15,7 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
 
   int line_no = 1;
   int char_pos = 1;
-  std::vector<Token *> tokens;
+  std::vector<std::shared_ptr<Token>> tokens;
   std::string current_str = "";
 
   // each time we iterate through, also increment char_pos
@@ -41,23 +41,23 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
           // should be end of token, we should do checks and create the new
           // token
           if (Comparisons::isKeyword(current_str)) {
-            tokens.push_back(
+            tokens.emplace_back(
                 new Token(keyword, current_str, line_no, char_pos - current_str.size()));
             current_str.clear();
           } else if (Comparisons::isOp(current_str)) {
-            tokens.push_back(new Token(op, current_str, line_no,
-                                       char_pos - current_str.size()));
+            tokens.emplace_back(new Token(op, current_str, line_no,
+                                          char_pos - current_str.size()));
             current_str.clear();
           } else if (Comparisons::isLogicalOp(current_str)) {
-            tokens.push_back(new Token(logical_op, current_str, line_no,
-                                       char_pos - current_str.size()));
+            tokens.emplace_back(new Token(logical_op, current_str, line_no,
+                                          char_pos - current_str.size()));
             current_str.clear();
           } else if (Comparisons::isLiteral(current_str)) {
-            tokens.push_back(createLiteralToken(current_str, line_no,
-                                                char_pos - current_str.size()));
+            tokens.emplace_back(createLiteralToken(
+                current_str, line_no, char_pos - current_str.size()));
             current_str.clear();
           } else if (Comparisons::isIdentifier(current_str)) {
-            tokens.push_back(createIdentifierToken(
+            tokens.emplace_back(createIdentifierToken(
                 current_str, line_no, char_pos - current_str.size()));
             current_str.clear();
           }
@@ -68,8 +68,8 @@ std::vector<Token *> Lexical::tokenise(const std::vector<char> &chars) {
                                    char_pos - -current_str.size());
         }
         if (Comparisons::isDelim(current_char) && prev_char != '\\') {
-          tokens.push_back(new Token(delim, std::string(1, current_char),
-                                     line_no, char_pos));
+          tokens.emplace_back(new Token(delim, std::string(1, current_char),
+                                        line_no, char_pos));
         }
         current_str.clear();
         continue;
@@ -171,13 +171,12 @@ void Lexical::printBracketError(const int line_no, const int char_pos, const cha
   exit(0);
 }
 
-#define current_token tokens[i]
-#define previous_token tokens[i - 1]
+#define current_token tokens[i].get()
+#define previous_token tokens[i - 1].get()
 
-void Lexical::checkIdentifierValidity(const std::vector<Token *> &tokens) {
-  std::vector<Token *> validIdentifiers;
-
-  for (int i = 0; i < tokens.size(); i++){
+void Lexical::checkIdentifierValidity(const std::vector<std::shared_ptr<Token>> &tokens) {
+  std::vector<std::shared_ptr<Token>> validIdentifiers;
+  for (int i = 0; i < tokens.size(); i++) {
     Token * currenttoken = current_token;
     //only running logic on identifier tokens
     if (current_token->getTokenType() == identifier){
@@ -192,7 +191,7 @@ void Lexical::checkIdentifierValidity(const std::vector<Token *> &tokens) {
             current_token->setIdentifierType(function);
             current_token->setArgCount(findArgCount(current_token, tokens, i));
           }
-            validIdentifiers.push_back(current_token);
+            validIdentifiers.emplace_back(new Token(*current_token));
         }
         else{
           //if the identifier decleration IS already in the vector
@@ -213,19 +212,21 @@ void Lexical::checkIdentifierValidity(const std::vector<Token *> &tokens) {
 
 }
 
-bool Lexical::vecContainsIdentifier(Token* token, const std::vector<Token *> &vec){
-    for (auto identifier : vec){
-      if (token->getVal() == identifier->getVal()){
-        token->setIdentifierType(identifier->getIdentifierType());
-        token->setArgCount(identifier->getArgCount());
-        return true;
-      }
+bool Lexical::vecContainsIdentifier(
+    Token *token, const std::vector<std::shared_ptr<Token>> &vec) {
+  for (auto &identifier : vec) {
+    if (token->getVal() == identifier->getVal()) {
+      token->setIdentifierType(identifier->getIdentifierType());
+      token->setArgCount(identifier->getArgCount());
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
-int Lexical::findArgCount(Token *token, const std::vector<Token *> &vec,
-                           int index) {
+int Lexical::findArgCount(Token *token,
+                          const std::vector<std::shared_ptr<Token>> &vec,
+                          int index) {
   int argCount = 0;
   index++;
   //if function declaration is not followed by open perentheses, print an error and exit

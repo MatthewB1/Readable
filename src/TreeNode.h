@@ -10,8 +10,6 @@ public:
   TreeNode(const T &data);
   TreeNode(const T &data, TreeNode<T> *parent);
 
-  ~TreeNode();
-
   void setLeft(TreeNode<T> *left);
   void setRight(TreeNode<T> *right);
   void setParent(TreeNode<T> *parent);
@@ -40,11 +38,6 @@ template <typename T>
 TreeNode<T>::TreeNode(const T &data, TreeNode<T> *parent) : Node<T>(data) {
   this->left = this->right = nullptr;
   this->parent = parent;
-}
-
-template <typename T> TreeNode<T>::~TreeNode() {
-  delete left;
-  delete right;
 }
 
 template <typename T> void TreeNode<T>::setLeft(TreeNode<T> *left) {

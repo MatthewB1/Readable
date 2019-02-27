@@ -4,13 +4,17 @@
 
 namespace Parser {
 
-std::vector<TreeNode<Token *> *> parse(const std::vector<Token *> &tokens);
+std::vector<TreeNode<std::shared_ptr<Token>>>
+parse(const std::vector<std::shared_ptr<Token>> &tokens);
 
-TreeNode<Token *> * evaluateStatement(const std::vector<Token *> &statement);
+TreeNode<std::shared_ptr<Token>>
+evaluateStatement(const std::vector<std::shared_ptr<Token>> &statement);
 
-TreeNode<Token *> *evaluateKeywordStatement(const std::vector<Token *> &statement);
+TreeNode<std::shared_ptr<Token>>
+evaluateKeywordStatement(const std::vector<std::shared_ptr<Token>> &statement);
 
-TreeNode<Token *> *evaluateExpression(const std::vector<Token *> &expression);
+TreeNode<std::shared_ptr<Token>> *
+evaluateExpression(const std::vector<std::shared_ptr<Token>> &expression);
 
 void errorEvaluatingStatement();
 }
