@@ -14,7 +14,8 @@
                 "parser.cpp",
                 "Token.cpp",
                 "TreeNode.h",
-                "utils.cpp",
+                "utils.cpp"
+                // "graphvis/lib/gvc/gvc.h"
             ],
             "group": {
                 "kind": "build",

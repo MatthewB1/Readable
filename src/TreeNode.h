@@ -22,6 +22,7 @@ public:
   int getTreeHeight();
   int getDepthOfNode();
   int getDepthFromNode();
+  int getTotalNodes();
 
   int getChildCount();
 };
@@ -45,14 +46,12 @@ template <typename T> void TreeNode<T>::setLeft(TreeNode<T> *left) {
   left->setParent(this);
 }
 
-template <typename T>
-void TreeNode<T>::setRight(TreeNode<T> *right) {
+template <typename T> void TreeNode<T>::setRight(TreeNode<T> *right) {
   this->right = right;
   right->setParent(this);
 }
 
-template <typename T>
-void TreeNode<T>::setParent(TreeNode<T> * parent) {
+template <typename T> void TreeNode<T>::setParent(TreeNode<T> *parent) {
   this->parent = parent;
 }
 
@@ -101,26 +100,42 @@ template <typename T> int TreeNode<T>::getDepthOfNode() {
 }
 
 template <typename T> int TreeNode<T>::getDepthFromNode() {
-  if (left == nullptr && right == nullptr)
-    return 0;
-  else {
-    int lDepth, rDepth;
+  /*
+**********************************************************
+This function doesn't work atm, dunno why
+**********************************************************
+  */
+  return 0;
+  // if (left == nullptr && right == nullptr)
+  //   return 0;
+  // else {
+  //   int lDepth, rDepth;
 
-    if (left != nullptr)
-      lDepth = getDepthFromNode(left);
-    else
-      lDepth = 0;
+  //   if (left != nullptr)
+  //     lDepth = left.getDepthFromNode();
+  //   else
+  //     lDepth = 0;
 
-    if (right != nullptr)
-      rDepth = getDepthFromNode(right);
-    else
-      rDepth = 0;
+  //   if (right != nullptr)
+  //     rDepth = right.getDepthFromNode();
+  //   else
+  //     rDepth = 0;
 
-    if (lDepth > rDepth)
-      return (lDepth + 1);
-    else
-      return (rDepth + 1);
-  }
+  //   if (lDepth > rDepth)
+  //     return (lDepth + 1);
+  //   else
+  //     return (rDepth + 1);
+  // }
+}
+
+template <typename T> int TreeNode<T>::getTotalNodes() {
+  // auto top = getTopOfTree();
+  // if (top.getChildCount() == 0){
+  //   return 1;
+  // } else {
+
+  // }
+  return 0;
 }
 
 template <typename T> int TreeNode<T>::getChildCount() {

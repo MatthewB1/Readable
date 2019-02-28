@@ -118,9 +118,20 @@ void Utils::printTokens(const std::vector<std::shared_ptr<Token>> &vec) {
 }
 
 void Utils::visualiseProgram(
-    const std::vector<TreeNode<std::shared_ptr<Token>>> trees) {
+     const std::vector<TreeNode<std::shared_ptr<Token>>> &trees) {
   std::cout << "\n**********************************************************\n"
   << "Visualised program:\n\nNo. of statements in program : "
-  << trees.size();
+  << trees.size() << "\n\n";
+
+  
+  TreeNode<std::shared_ptr<Token>> node;
+
+
+  for (size_t i = 0; i < trees.size(); i++) {
+    node = trees[i];
+    std::cout << "Statement 1 : depth: " << node.getChildCount() << " ";
+
+    std::cout << std::endl;
+  }
 
 }

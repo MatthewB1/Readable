@@ -44,7 +44,10 @@
         "stack": "cpp",
         "cctype": "cpp",
         "map": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "list": "cpp",
+        "set": "cpp",
+        "sstream": "cpp"
     },
     "terminal.explorerKind": "external"
 }
