@@ -26,6 +26,5 @@ int main() {
     now we have an AST, we can compile to target language
   */
 
-  //test comment
   return 0;
 }

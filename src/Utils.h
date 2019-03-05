@@ -1,5 +1,4 @@
 #include <fstream>
-// #include <graphvis/lib/gvc/gvc.h>
 
 #include "Parser.h"
 namespace Utils {
@@ -11,6 +10,10 @@ void printCode(const std::vector<char> &code);
 void printTokens(const std::vector<std::shared_ptr<Token>> &vec);
 
 void visualiseProgram(
-    const std::vector<TreeNode<std::shared_ptr<Token>>> &trees);
+     std::vector<TreeNode<std::shared_ptr<Token>>> &trees);
+
+void printTree(TreeNode<std::shared_ptr<Token>> * tree);
+
+void printNode(TreeNode<std::shared_ptr<Token>> &node);
 
 } // namespace Utils

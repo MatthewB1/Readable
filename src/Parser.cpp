@@ -46,52 +46,46 @@ Parser::parse(const std::vector<std::shared_ptr<Token>> &tokens) {
   }
 
   return trees;
+}
+
+TreeNode<std::shared_ptr<Token>> Parser::evaluateStatement(
+    const std::vector<std::shared_ptr<Token>> &statement) {
+  std::cout << "\n**********************************************************\n";
+  std::cout << "Evaluating the following statement:"
+            << "\n\t";
+  std::for_each(statement.begin(), statement.end(),
+                [](auto token) { std::cout << token->getVal() << " "; });
+
+  switch (statement[0]->getTokenType()) {
+  case keyword: {
+    TreeNode<std::shared_ptr<Token>> tree = evaluateKeywordStatement(statement);
+    return tree;
   }
-
-  TreeNode<std::shared_ptr<Token>> Parser::evaluateStatement(
-      const std::vector<std::shared_ptr<Token>> &statement) {
-    std::cout
-        << "\n**********************************************************\n";
-    std::cout << "Evaluating the following statement:"
-              << "\n\t";
-    std::for_each(statement.begin(), statement.end(),
-                  [](auto token) { std::cout << token->getVal() << " "; });
-
-    switch (statement[0]->getTokenType()) {
-    case keyword: {
-      TreeNode<std::shared_ptr<Token>> tree =
-          evaluateKeywordStatement(statement);
-      return tree;
-    }
-    default: { errorEvaluatingStatement(); }
-    }
+  default: { errorEvaluatingStatement(); }
+  }
 }
 
 TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
     const std::vector<std::shared_ptr<Token>> &statement) {
   // variable declaration
   if (statement[0]->getVal() == "var") {
-    if (statement[2]->getVal() == "=") {
-      // set '=' as head of tree
+    if (statement[1]->getTokenType() != identifier ||
+        statement[2]->getVal() == "=") {
+      // set '=' as root of tree
       TreeNode<std::shared_ptr<Token>> head =
           TreeNode<std::shared_ptr<Token>>(statement[2]);
-      // left of tree is identifier
+      // lhs is identifier
       head.setLeft(new TreeNode<std::shared_ptr<Token>>(statement[1]));
+      // rhs is expression
+      head.setRight(evaluateExpression(std::vector<std::shared_ptr<Token>>(
+          std::make_move_iterator(statement.begin() + 3),
+          std::make_move_iterator(statement.end()))));
 
-      // if total length of statement is 4, ex - var y = 3, set rhs and return
-      auto x = statement.size();
-      if (x == 4) {
-        head.setRight(new TreeNode<std::shared_ptr<Token>>(statement[3]));
-        return head;
-      }
-      // else, rhs is complex expression, evaluate and return head of expression
-      else {
-        // evaluates expression, passes vector elements after '='
-        head.setRight(evaluateExpression(std::vector<std::shared_ptr<Token>>(
-            std::make_move_iterator(statement.begin() + 3),
-            std::make_move_iterator(statement.end()))));
-      }
+      return head;
     } else {
+      /*
+        statement does not match grammar : <identifier><operator><expression>
+      */
       errorEvaluatingStatement();
     }
   }
@@ -99,6 +93,21 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
 
 TreeNode<std::shared_ptr<Token>> *Parser::evaluateExpression(
     const std::vector<std::shared_ptr<Token>> &expression) {
+  if (expression.size() == 1) {
+    return new TreeNode<std::shared_ptr<Token>>(expression[0]);
+  }
+
+  // std::stack<TreeNode<std::shared_ptr<Token>>> stack;
+
+  // // we want deque behaviour, so copy vector elements into deque,
+  // // we also would like the expression in postfix notation
+  // TreeNode<std::shared_ptr<Token>> hold;
+  // std::deque<TreeNode<std::shared_ptr<Token>>> expr(expression.size());
+  // std::copy(expression.begin(), expression.end(), expr.begin());
+
+  // while (expr.size() > 0) {
+  // }
+
   return new TreeNode<std::shared_ptr<Token>>(expression[0]);
 }
 

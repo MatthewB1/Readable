@@ -1,9 +1,9 @@
 #include "Utils.h"
 
 std::vector<char> Utils::readFile(std::string path) {
-/*
-Reads in from a file, returns a vector of characters ready to be processed.
-*/
+  /*
+  Reads in from a file, returns a vector of characters ready to be processed.
+  */
   std::ifstream file(path);
   std::vector<char> buffer;
   if (file) {
@@ -118,20 +118,29 @@ void Utils::printTokens(const std::vector<std::shared_ptr<Token>> &vec) {
 }
 
 void Utils::visualiseProgram(
-     const std::vector<TreeNode<std::shared_ptr<Token>>> &trees) {
-  std::cout << "\n**********************************************************\n"
-  << "Visualised program:\n\nNo. of statements in program : "
-  << trees.size() << "\n\n";
-
-  
-  TreeNode<std::shared_ptr<Token>> node;
-
+    std::vector<TreeNode<std::shared_ptr<Token>>> &trees) {
+  std::cout << "\n**********************************************************"
+            << std::endl
+            << "Visualised program:\n\n";
 
   for (size_t i = 0; i < trees.size(); i++) {
-    node = trees[i];
-    std::cout << "Statement 1 : depth: " << node.getChildCount() << " ";
-
+    std::cout << "Tree no." << i + 1
+              << " - node count : " << TreeUtils::size(&trees[i]) << std::endl;
+    printTree(&trees[i]);
     std::cout << std::endl;
   }
+}
 
+void Utils::printTree(TreeNode<std::shared_ptr<Token>> *node) {
+  if (node == NULL)
+    return;
+
+  printTree(node->getLeft());
+  printNode(*node);
+  printTree(node->getRight());
+}
+
+void Utils::printNode(TreeNode<std::shared_ptr<Token>> &node) {
+  std::cout << "\tdepth : " << node.getDepthOfNode()
+            << " - val : " << node.getData()->getVal() << std::endl;
 }

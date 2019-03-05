@@ -1,4 +1,9 @@
 #include "Node.h"
+
+/*
+May want to come back to this file to use smart pointers
+will see after profiling
+*/
 template <typename T> class TreeNode : public Node<T> {
 private:
   TreeNode<T> *left;
@@ -18,13 +23,15 @@ public:
   TreeNode<T> *getRight();
   TreeNode<T> *getParent();
   TreeNode<T> *getTopOfTree();
+  TreeNode<T> *getStart();
+  TreeNode<T> *getBottomLeft();
 
   int getTreeHeight();
   int getDepthOfNode();
   int getDepthFromNode();
-  int getTotalNodes();
-
   int getChildCount();
+
+  static int size(TreeNode<T> *node);
 };
 
 template <typename T> TreeNode<T>::TreeNode() : Node<T>() {
@@ -66,7 +73,7 @@ template <typename T> TreeNode<T> *TreeNode<T>::getTopOfTree() {
   if (parent == nullptr)
     return this;
   else {
-    TreeNode *tempnode = parent;
+    TreeNode<T> *tempnode = parent;
     // while parent of tempnode exists, change tempnode pointer to parent
     while (tempnode->parent != nullptr) {
       tempnode = tempnode->parent;
@@ -76,26 +83,43 @@ template <typename T> TreeNode<T> *TreeNode<T>::getTopOfTree() {
   }
 }
 
+// start returns the bottom left node of the tree
+template <typename T> TreeNode<T> *TreeNode<T>::getStart() {
+  return this->getTopOfTree()->getBottomLeft();
+}
+
+template <typename T> TreeNode<T> *TreeNode<T>::getBottomLeft() {
+  if (this->left == nullptr)
+    return this;
+  else {
+    TreeNode<T> *temp = this->left;
+    while (temp->left != nullptr) {
+      temp = temp->left;
+    }
+    return temp;
+  }
+}
+
 template <typename T> int TreeNode<T>::getTreeHeight() {
   return (getTopOfTree()->getDepthFromNode() + 1);
 }
 
 template <typename T> int TreeNode<T>::getDepthOfNode() {
-  // if no parent, node is head of tree, return 0
   if (parent == nullptr)
     return 0;
   else {
-    // if there is a parent, node is at least depth 1
-    int count = 1;
-    TreeNode *tempnode = parent;
-    // iterate through parents, incrementing count each time
-    while (tempnode->parent != nullptr) {
-      tempnode = tempnode->parent;
-      count++;
+    int count = 0;
+    TreeNode<T> * temp = parent;
+
+    while (temp != nullptr){
+      if (temp->parent != nullptr){
+        temp = temp->parent;
+        ++count;
+        break;
+      }
     }
-    // when there is no parent, we are at the head, return count for depth of
-    // original node
     return count;
+
   }
 }
 
@@ -128,16 +152,17 @@ This function doesn't work atm, dunno why
   // }
 }
 
-template <typename T> int TreeNode<T>::getTotalNodes() {
-  // auto top = getTopOfTree();
-  // if (top.getChildCount() == 0){
-  //   return 1;
-  // } else {
-
-  // }
-  return 0;
-}
-
 template <typename T> int TreeNode<T>::getChildCount() {
   return ((int)(left != nullptr) + (int)(right != nullptr));
 }
+
+namespace TreeUtils {
+template <typename T> int size(TreeNode<T> *node) {
+  if (node == nullptr) {
+    return 0;
+  } else { // Add the size of the left and right trees, then add 1 (which is the
+           // current node)
+    return size(node->getLeft()) + size(node->getRight()) + 1;
+  }
+}
+} // namespace TreeUtils

@@ -1,3 +1,2 @@
 var y = 3;
 
-var x = "slash test";
