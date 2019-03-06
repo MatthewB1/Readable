@@ -8,10 +8,16 @@ Token::Token(const TypeOf _tokenType, const std::string _val,
   this->lineNum = _lineNum;
   this->charPos = _charPos;
 }
-const TypeOf Token::getTokenType() { return this->tokenType; }
-const std::string Token::getVal() { return this->val; }
-const int Token::getLine() { return this->lineNum; }
-const int Token::getCharPos() { return this->charPos; }
+Token::Token(const Token &old) {
+  this->tokenType = old.tokenType;
+  this->val = old.val;
+  this->lineNum = old.lineNum;
+  this->charPos = old.charPos;
+}
+const TypeOf Token::getTokenType() { return tokenType; }
+const std::string Token::getVal() { return val; }
+const int Token::getLine() { return lineNum; }
+const int Token::getCharPos() { return charPos; }
 
 //virtual functions
 const LiteralType Token::getLiteralType() { return nullLiteral; }

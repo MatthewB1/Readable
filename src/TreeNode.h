@@ -155,7 +155,7 @@ This function doesn't work atm, dunno why
 template <typename T> int TreeNode<T>::getChildCount() {
   return ((int)(left != nullptr) + (int)(right != nullptr));
 }
-
+  
 namespace TreeUtils {
 template <typename T> int size(TreeNode<T> *node) {
   if (node == nullptr) {
