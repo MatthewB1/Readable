@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stack>
 #include <utility>
+#include <memory>
 
 namespace Lexical {
 

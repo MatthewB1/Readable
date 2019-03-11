@@ -128,23 +128,49 @@ TreeNode<std::shared_ptr<Token>> *Parser::evaluateExpression(
     return new TreeNode<std::shared_ptr<Token>>(expression[0]);
   }
 
-  // std::stack<TreeNode<std::shared_ptr<Token>>> stack;
-  // auto postfix = toPostfix(expression);
+  std::stack<TreeNode<std::shared_ptr<Token>>> stack;
+  auto postfix = toPostfix(expression);
 
-  return new TreeNode<std::shared_ptr<Token>>(expression[0]);
+
+  while (postfix.size() > 0) {
+    // if front is an operand, place on stack
+    if (postfix.front()->getTokenType() == TypeOf::literal ||
+        postfix.front()->getTokenType() == TypeOf::identifier) {
+      stack.push(postfix.front());
+      postfix.pop_front();
+    }
+    // if operator, make node, set top two stack elements as right and left,
+    // place on stack
+    if (postfix.front()->getTokenType() == TypeOf::op) {
+      if (stack.size() >= 2) {
+        auto node = TreeNode<std::shared_ptr<Token>>(postfix.front());
+        postfix.pop_front();
+        node.setRight(new TreeNode<std::shared_ptr<Token>>(stack.top()));
+        stack.pop();
+        node.setLeft(new TreeNode<std::shared_ptr<Token>>(stack.top()));
+        stack.pop();
+        stack.push(node);
+      } else {
+        errorEvaluatingStatement();
+        exit(0);
+      }
+    }
+  }
+
+  // if stack is not empty, expression was invalid
+  // throw error and exit program
+  if (stack.size() != 1) {
+    errorEvaluatingStatement();
+    exit(0);
+  }
+
+  return new TreeNode<std::shared_ptr<Token>>(stack.top());
 }
 
 std::deque<std::shared_ptr<Token>>
 Parser::toPostfix(const std::vector<std::shared_ptr<Token>> &expression) {
 
-  //**THIS SUCCESSFULLY ACCESSES THE VALUE
-  std::cout << std::endl;
-  for (auto i = 0; i < expression.size(); ++i){
-    std::cout << expression[i]->getVal();
-  }
-
   std::deque<std::shared_ptr<Token>> postfix;
-  postfix.resize(expression.size());
   std::stack<std::shared_ptr<Token>> stack;
 
   for (auto i = 0; i < expression.size(); ++i) {
@@ -152,51 +178,29 @@ Parser::toPostfix(const std::vector<std::shared_ptr<Token>> &expression) {
     if (expression[i]->getTokenType() == literal ||
         expression[i]->getTokenType() == identifier) {
       postfix.push_back(expression[i]);
-      //**THIS SUCCESSFULLY ACCESSES THE VALUE
-      std::cout << postfix[postfix.size() - 1]->getVal();
       continue;
     }
     // evaluate operator
     if (expression[i]->getTokenType() == op) {
-      while (!stack.empty() && higherPrecedence(stack.top()->getVal(), expression[i]->getVal())) {
+      while (!stack.empty() &&
+             higherPrecedence(stack.top()->getVal(), expression[i]->getVal())) {
         postfix.push_back(stack.top());
-        //**THIS SUCCESSFULLY ACCESSES THE VALUE
-        std::cout << postfix[postfix.size() - 1]->getVal();
         stack.pop();
       }
       stack.push(expression[i]);
       continue;
     }
     // if it's neither of these it's invalid (for now)
+    // print error and end program
     errorEvaluatingStatement();
+    exit(0);
   }
   // after the entire expression has been parsed
   // push any operators left on the stack to deque
   while (!stack.empty()) {
     postfix.push_back(stack.top());
-    //**THIS SUCCESSFULLY ACCESSES THE VALUE
-    std::cout << postfix[postfix.size() - 1]->getVal();
     stack.pop();
   }
-
-  //**THIS SUCCESSFULLY ACCESSES THE VALUE
-  std::cout << postfix[postfix.size() - 1]->getVal();
-
-  //**THIS IS A SEG ERROR
-  std::cout << postfix[0]->getVal();
-
-  //**THIS IS A SEG ERROR
-  std::cout <<std::endl << postfix[0]->getVal() << " " << postfix[1]->getVal() << " " << postfix[2]->getVal();
-  
-  std::cout << std::endl;
-
-  //**THIS IS A SEG ERROR
-  for(auto i = 0; i < postfix.size(); ++i){
-    std::cout << postfix[i]->getVal();
-  }
-
-  
-
 
   return postfix;
 }
@@ -213,16 +217,15 @@ bool Parser::higherPrecedence(std::string op1, std::string op2) {
     first == paren;
 
   if (op2 == "+" || op2 == "-")
-    first = addsub;
+    second = addsub;
   if (op2 == "*" || op2 == "/")
-    first = multdiv;
+    second = multdiv;
   if (op2 == "(" || op2 == ")")
-    first == paren;
+    second == paren;
 
   return first > second;
 }
 
 void Parser::errorEvaluatingStatement() {
   std::cout << "\n***Error evaluating statement...\nExiting program...";
-  exit(0);
 }
