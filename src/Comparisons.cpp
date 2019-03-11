@@ -14,7 +14,8 @@ bool Comparisons::isDelim(const char c) {
 }
 bool Comparisons::isOp(const std::string str) {
   if (str == "+" || str == "-" || str == "*" || str == "/" || str == "=" ||
-      str == "+=" || str == "-=" || str == "++" || str == "--")
+      str == "+=" || str == "-=" || str == "*=" || str == "/=" || str == "++" ||
+      str == "--")
     return true;
   return false;
 }

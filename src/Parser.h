@@ -4,7 +4,7 @@
 
 namespace Parser {
 
-typedef enum {addsub, multdiv, expo, paren} precedence;
+typedef enum {addsub, multdiv, expo, OR, AND, NOT, paren} precedence;
 
 std::vector<TreeNode<std::shared_ptr<Token>>>
 parse(const std::vector<std::shared_ptr<Token>> &tokens);
@@ -20,6 +20,9 @@ evaluateIdentifierStatement(const std::vector<std::shared_ptr<Token>> &statement
 
 TreeNode<std::shared_ptr<Token>> *
 evaluateExpression(const std::vector<std::shared_ptr<Token>> &expression);
+
+TreeNode<std::shared_ptr<Token>> *
+evaluateLogicalExpression(const std::vector<std::shared_ptr<Token>> &expression);
 
 std::deque<std::shared_ptr<Token>> 
 toPostfix(const std::vector<std::shared_ptr<Token>> &expression); 

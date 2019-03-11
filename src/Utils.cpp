@@ -117,6 +117,7 @@ void Utils::printTokens(const std::vector<std::shared_ptr<Token>> &vec) {
   std::cout << "}";
 }
 
+//print out some information about the parsed trees
 void Utils::visualiseProgram(
     std::vector<TreeNode<std::shared_ptr<Token>>> &trees) {
   std::cout << "\n**********************************************************"
@@ -131,16 +132,17 @@ void Utils::visualiseProgram(
   }
 }
 
+//recursively prints all nodes, left to right
 void Utils::printTree(TreeNode<std::shared_ptr<Token>> *node) {
   if (node == NULL)
     return;
-
   printTree(node->getLeft());
   printNode(*node);
   printTree(node->getRight());
 }
 
 void Utils::printNode(TreeNode<std::shared_ptr<Token>> &node) {
+  //depth does not return correctly atm.
   std::cout << "\tdepth : " << node.getDepthOfNode()
             << " - val : " << node.getData()->getVal() << std::endl;
 }

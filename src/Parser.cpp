@@ -4,33 +4,16 @@
 
 std::vector<TreeNode<std::shared_ptr<Token>>>
 Parser::parse(const std::vector<std::shared_ptr<Token>> &tokens) {
-  /*
-  To begin with I am going to focus on parsing some simple lines of code :
-  var y = 3;
 
-  I expect this to be visually represented as something like
-        =
-      /   \
-    Y       3
-
-    This basic <operand><operator><operand> will be the building block of
-  expressions I assume. For example a slightly more complex line of code: x = 4
-  + 7;
-        =
-      /   \
-     x     +
-         /   \
-        4     7
-
-    For now I want to approach parsing these simple statements. Before moving on
-  to more complex things.
-  */
-
-  // trees vector will hold pointers to the top of each tree
+  // trees vector holds the root of all trees
   std::vector<TreeNode<std::shared_ptr<Token>>> trees;
   std::vector<std::shared_ptr<Token>> current_statement;
 
   for (auto i = 0; i < tokens.size(); i++) {
+
+    /*
+    encountering 'for' or 'function' should enter a special loop?
+    */
 
     if (current_token->getTokenType() == delim &&
         current_token->getVal() == ";") {
@@ -50,6 +33,8 @@ Parser::parse(const std::vector<std::shared_ptr<Token>> &tokens) {
 
 TreeNode<std::shared_ptr<Token>> Parser::evaluateStatement(
     const std::vector<std::shared_ptr<Token>> &statement) {
+
+  // print statement that is being evaluated
   std::cout << "\n**********************************************************\n";
   std::cout << "Evaluating the following statement:"
             << "\n\t";
@@ -57,26 +42,40 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateStatement(
                 [](auto token) { std::cout << token->getVal() << " "; });
   std::cout << std::endl;
 
+  // switch case to select appropriate handler
   switch (statement[0]->getTokenType()) {
+
+  //<keyword><identifier><operator><expression>
   case keyword: {
     TreeNode<std::shared_ptr<Token>> tree = evaluateKeywordStatement(statement);
     return tree;
   }
+
+  //<identifier><operator><expression>
   case identifier: {
     TreeNode<std::shared_ptr<Token>> tree =
         evaluateIdentifierStatement(statement);
     return tree;
   }
-  default: { errorEvaluatingStatement(); }
+
+  // default case is an error, as it matches no defined grammar
+  default: {
+    errorEvaluatingStatement();
+    exit(0);
+  }
   }
 }
 
 // KEYWORD
 TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
     const std::vector<std::shared_ptr<Token>> &statement) {
-  // variable declaration
-  if (statement[0]->getVal() == "var") {
-    if (statement[1]->getTokenType() != identifier ||
+
+ 
+  if (statement[0]->getVal() == "var"){
+    // variable declaration must match grammar:
+    //<keyword><identifier><operator><expression>
+    // keyword MUST be var, operator MUST be assignment operator
+    if (statement[1]->getTokenType() == identifier &&
         statement[2]->getVal() == "=") {
       // set '=' as root of tree
       TreeNode<std::shared_ptr<Token>> head =
@@ -84,6 +83,7 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
       // lhs is identifier
       head.setLeft(new TreeNode<std::shared_ptr<Token>>(statement[1]));
       // rhs is expression
+      // pass in every element after "=" to evaluate
       head.setRight(evaluateExpression(std::vector<std::shared_ptr<Token>>(
           std::make_move_iterator(statement.begin() + 3),
           std::make_move_iterator(statement.end()))));
@@ -94,6 +94,21 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
         statement does not match grammar : <identifier><operator><expression>
       */
       errorEvaluatingStatement();
+      exit(0);
+    }
+  }
+  if (statement[0]->getVal() == "flip"){
+    // flip statement must match grammar:
+    //<keyword><identifier>
+    // keyword MUST be flip, identifier MUST be bool type
+    if (statement[1]->getTokenType() == identifier && statement[1]->getLiteralType() == boolean) {
+      //TODO represent a tree of this?
+    } else{
+      /*
+       statement does not match grammar : <keyword><identifier>
+     */
+      errorEvaluatingStatement();
+      exit(0);
     }
   }
 }
@@ -101,8 +116,15 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
 // IDENTIFIER
 TreeNode<std::shared_ptr<Token>> Parser::evaluateIdentifierStatement(
     const std::vector<std::shared_ptr<Token>> &statement) {
-  if (statement[0]->getTokenType() != identifier ||
-      statement[1]->getVal() == "=") {
+
+  // variable declaration must match grammar:
+  //<identifier><operator><expression>
+  // operator can be assignment or add/sub/mult/div assignment 
+  if (statement[0]->getTokenType() == identifier
+
+      && (statement[1]->getVal() == "=" || statement[1]->getVal() == "+=" ||
+          statement[1]->getVal() == "-=" || statement[1]->getVal() == "*=" ||
+          statement[1]->getVal() == "-=" || statement[1]->getVal() == "/=")) {
     // set '=' as root of tree
     TreeNode<std::shared_ptr<Token>> head =
         TreeNode<std::shared_ptr<Token>>(statement[1]);
@@ -119,6 +141,7 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateIdentifierStatement(
       statement does not match grammar : <identifier><operator><expression>
     */
     errorEvaluatingStatement();
+    exit(0);
   }
 }
 
@@ -130,7 +153,6 @@ TreeNode<std::shared_ptr<Token>> *Parser::evaluateExpression(
 
   std::stack<TreeNode<std::shared_ptr<Token>>> stack;
   auto postfix = toPostfix(expression);
-
 
   while (postfix.size() > 0) {
     // if front is an operand, place on stack
@@ -167,6 +189,52 @@ TreeNode<std::shared_ptr<Token>> *Parser::evaluateExpression(
   return new TreeNode<std::shared_ptr<Token>>(stack.top());
 }
 
+TreeNode<std::shared_ptr<Token>> *Parser::evaluateLogicalExpression(
+    const std::vector<std::shared_ptr<Token>> &expression) {
+  if (expression.size() == 1) {
+    return new TreeNode<std::shared_ptr<Token>>(expression[0]);
+  }
+
+  std::stack<TreeNode<std::shared_ptr<Token>>> stack;
+  auto postfix = toPostfix(expression);
+
+  while (postfix.size() > 0) {
+    // if front is an operand, place on stack
+    if (postfix.front()->getTokenType() == TypeOf::literal ||
+        postfix.front()->getTokenType() == TypeOf::identifier) {
+      stack.push(postfix.front());
+      postfix.pop_front();
+    }
+    // if operator, make node, set top two stack elements as right and left,
+    // place on stack
+    if (postfix.front()->getTokenType() == TypeOf::op) {
+      if (stack.size() >= 2) {
+        auto node = TreeNode<std::shared_ptr<Token>>(postfix.front());
+        postfix.pop_front();
+        node.setRight(new TreeNode<std::shared_ptr<Token>>(stack.top()));
+        stack.pop();
+        node.setLeft(new TreeNode<std::shared_ptr<Token>>(stack.top()));
+        stack.pop();
+        stack.push(node);
+      } else {
+        errorEvaluatingStatement();
+        exit(0);
+      }
+    }
+  }
+
+  // if stack is not empty, expression was invalid
+  // throw error and exit program
+  if (stack.size() != 1) {
+    errorEvaluatingStatement();
+    exit(0);
+  }
+
+  return new TreeNode<std::shared_ptr<Token>>(stack.top());
+}
+
+// converts an expression - a vector of tokens into a deque of the same
+// expression, in postfix
 std::deque<std::shared_ptr<Token>>
 Parser::toPostfix(const std::vector<std::shared_ptr<Token>> &expression) {
 
@@ -180,8 +248,12 @@ Parser::toPostfix(const std::vector<std::shared_ptr<Token>> &expression) {
       postfix.push_back(expression[i]);
       continue;
     }
-    // evaluate operator
-    if (expression[i]->getTokenType() == op) {
+    // evaluate operator, if it's of higher precedence than the operator at the
+    // top of the stack
+    // push it straight on to the postfix deque
+    // if it's of equal or lower precedence (or stack is empty) place on stack
+    if (expression[i]->getTokenType() == op ||
+        expression[i]->getTokenType() == logical_op) {
       while (!stack.empty() &&
              higherPrecedence(stack.top()->getVal(), expression[i]->getVal())) {
         postfix.push_back(stack.top());
@@ -195,6 +267,7 @@ Parser::toPostfix(const std::vector<std::shared_ptr<Token>> &expression) {
     errorEvaluatingStatement();
     exit(0);
   }
+
   // after the entire expression has been parsed
   // push any operators left on the stack to deque
   while (!stack.empty()) {
@@ -205,6 +278,7 @@ Parser::toPostfix(const std::vector<std::shared_ptr<Token>> &expression) {
   return postfix;
 }
 
+// returns true when precedence of arg1 is higher than arg 2
 bool Parser::higherPrecedence(std::string op1, std::string op2) {
   int first;
   int second;
