@@ -135,25 +135,28 @@ bool Lexical::bracketsBalanced(const std::vector<char> &chars) {
           case closePeren:
             if (stack.size() > 0 && stack.top().second == openPeren)
               stack.pop();
-            else
+            else {
               printBracketError(line_no, char_pos, current_char);
-            return false;
+              return false;
+            }
             break;
 
           case closeBrace:
             if (stack.size() > 0 && stack.top().second == openBrace)
               stack.pop();
-            else
+            else {
               printBracketError(line_no, char_pos, current_char);
-            return false;
+              return false;
+            }
             break;
 
           case closeSquare:
             if (stack.size() > 0 && stack.top().second == openSquare)
               stack.pop();
-            else
+            else {
               printBracketError(line_no, char_pos, current_char);
-            return false;
+              return false;
+            }
             break;
           }
         }

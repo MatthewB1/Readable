@@ -70,8 +70,7 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateStatement(
 TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
     const std::vector<std::shared_ptr<Token>> &statement) {
 
- 
-  if (statement[0]->getVal() == "var"){
+  if (statement[0]->getVal() == "var") {
     // variable declaration must match grammar:
     //<keyword><identifier><operator><expression>
     // keyword MUST be var, operator MUST be assignment operator
@@ -97,13 +96,14 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
       exit(0);
     }
   }
-  if (statement[0]->getVal() == "flip"){
+  if (statement[0]->getVal() == "flip") {
     // flip statement must match grammar:
     //<keyword><identifier>
     // keyword MUST be flip, identifier MUST be bool type
-    if (statement[1]->getTokenType() == identifier && statement[1]->getLiteralType() == boolean) {
-      //TODO represent a tree of this?
-    } else{
+    if (statement[1]->getTokenType() == identifier &&
+        statement[1]->getLiteralType() == boolean) {
+      // TODO represent a tree of this?
+    } else {
       /*
        statement does not match grammar : <keyword><identifier>
      */
@@ -119,7 +119,7 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateIdentifierStatement(
 
   // variable declaration must match grammar:
   //<identifier><operator><expression>
-  // operator can be assignment or add/sub/mult/div assignment 
+  // operator can be assignment or add/sub/mult/div assignment
   if (statement[0]->getTokenType() == identifier
 
       && (statement[1]->getVal() == "=" || statement[1]->getVal() == "+=" ||
@@ -156,14 +156,18 @@ TreeNode<std::shared_ptr<Token>> *Parser::evaluateExpression(
 
   while (postfix.size() > 0) {
     // if front is an operand, place on stack
+    auto token = postfix.front();
     if (postfix.front()->getTokenType() == TypeOf::literal ||
         postfix.front()->getTokenType() == TypeOf::identifier) {
       stack.push(postfix.front());
       postfix.pop_front();
+      continue;
     }
     // if operator, make node, set top two stack elements as right and left,
     // place on stack
-    if (postfix.front()->getTokenType() == TypeOf::op) {
+    if (postfix.front()->getTokenType() == TypeOf::op &&
+            postfix.front()->getVal() != "=" ||
+        postfix.front()->getTokenType() == TypeOf::logical_op) {
       if (stack.size() >= 2) {
         auto node = TreeNode<std::shared_ptr<Token>>(postfix.front());
         postfix.pop_front();
@@ -176,51 +180,10 @@ TreeNode<std::shared_ptr<Token>> *Parser::evaluateExpression(
         errorEvaluatingStatement();
         exit(0);
       }
+      continue;
     }
-  }
-
-  // if stack is not empty, expression was invalid
-  // throw error and exit program
-  if (stack.size() != 1) {
     errorEvaluatingStatement();
     exit(0);
-  }
-
-  return new TreeNode<std::shared_ptr<Token>>(stack.top());
-}
-
-TreeNode<std::shared_ptr<Token>> *Parser::evaluateLogicalExpression(
-    const std::vector<std::shared_ptr<Token>> &expression) {
-  if (expression.size() == 1) {
-    return new TreeNode<std::shared_ptr<Token>>(expression[0]);
-  }
-
-  std::stack<TreeNode<std::shared_ptr<Token>>> stack;
-  auto postfix = toPostfix(expression);
-
-  while (postfix.size() > 0) {
-    // if front is an operand, place on stack
-    if (postfix.front()->getTokenType() == TypeOf::literal ||
-        postfix.front()->getTokenType() == TypeOf::identifier) {
-      stack.push(postfix.front());
-      postfix.pop_front();
-    }
-    // if operator, make node, set top two stack elements as right and left,
-    // place on stack
-    if (postfix.front()->getTokenType() == TypeOf::op) {
-      if (stack.size() >= 2) {
-        auto node = TreeNode<std::shared_ptr<Token>>(postfix.front());
-        postfix.pop_front();
-        node.setRight(new TreeNode<std::shared_ptr<Token>>(stack.top()));
-        stack.pop();
-        node.setLeft(new TreeNode<std::shared_ptr<Token>>(stack.top()));
-        stack.pop();
-        stack.push(node);
-      } else {
-        errorEvaluatingStatement();
-        exit(0);
-      }
-    }
   }
 
   // if stack is not empty, expression was invalid

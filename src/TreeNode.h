@@ -107,22 +107,9 @@ template <typename T> int TreeNode<T>::getTreeHeight() {
 template <typename T> int TreeNode<T>::getDepthOfNode() {
   if (parent == nullptr)
     return 0;
-  else {
-    int count = 0;
-    TreeNode<T> * temp = parent;
-
-    while (temp != nullptr){
-      if (temp->parent != nullptr){
-        temp = temp->parent;
-        ++count;
-        break;
-      }
-    }
-    return count;
-
-  }
+ //dunno how to fix this function, seg faults :~(
+  return 1;
 }
-
 template <typename T> int TreeNode<T>::getDepthFromNode() {
   /*
 **********************************************************
@@ -155,7 +142,7 @@ This function doesn't work atm, dunno why
 template <typename T> int TreeNode<T>::getChildCount() {
   return ((int)(left != nullptr) + (int)(right != nullptr));
 }
-  
+
 namespace TreeUtils {
 template <typename T> int size(TreeNode<T> *node) {
   if (node == nullptr) {

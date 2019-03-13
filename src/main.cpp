@@ -26,5 +26,9 @@ int main() {
     now we have an AST, we can compile to target language
   */
 
+//generate will take parsed trees, walk and translate to target language
+//it will print it's results to console and save to a file
+//  CodeGeneration::generate(trees);
+
   return 0;
 }
