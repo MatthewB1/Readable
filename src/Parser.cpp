@@ -97,19 +97,43 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
     }
   }
   if (statement[0]->getVal() == "flip") {
-    // flip statement must match grammar:
-    //<keyword><identifier>
-    // keyword MUST be flip, identifier MUST be bool type
-    if (statement[1]->getTokenType() == identifier &&
-        statement[1]->getLiteralType() == boolean) {
-      // TODO represent a tree of this?
-    } else {
-      /*
-       statement does not match grammar : <keyword><identifier>
-     */
-      errorEvaluatingStatement();
-      exit(0);
-    }
+    // // flip statement must match grammar:
+    // //<keyword><identifier>
+    // // keyword MUST be flip, identifier MUST be bool type
+    // if (statement[1]->getTokenType() == identifier &&
+    //     statement[1]->getLiteralType() == boolean) {
+
+    //   // flip <identifier>; will be implemented as
+    //   // <identifier> = !<identifier>
+
+    //   // set '=' as root of tree
+    //   TreeNode<std::shared_ptr<Token>> head =
+    //       TreeNode<std::shared_ptr<Token>>(std::make_shared<Token>(Token(op, "=", 0, 0)));
+    //   // lhs is identifier
+    //   head.setLeft(new TreeNode<std::shared_ptr<Token>>(statement[1]));
+    //   // rhs is expression
+    //   // pass in every element after "=" to evaluate
+    //   if (statement[1]->getVal() == "true") {
+    //     head.setRight(new TreeNode<std::shared_ptr<Token>>(
+    //         std::make_shared<Token>(Token(literal, "false", 0, 0))));
+    //     return head;
+    //   }
+    //   if (statement[1]->getVal() == "false") {
+    //     head.setRight(new TreeNode<std::shared_ptr<Token>>(
+    //         std::make_shared<Token>(Token(literal, "true", 0, 0))));
+    //     return head;
+    //   }
+      
+    //   //if for some reason the value of a boolean literal is neither true nor false, error
+    //   errorEvaluatingStatement();
+    //   exit(0);
+    // } else {
+    //   /*
+    //    statement does not match grammar : <keyword><identifier>
+    //  */
+    //   errorEvaluatingStatement();
+    //   exit(0);
+    // }
   }
 }
 

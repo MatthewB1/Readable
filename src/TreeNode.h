@@ -83,60 +83,13 @@ template <typename T> TreeNode<T> *TreeNode<T>::getTopOfTree() {
   }
 }
 
-// start returns the bottom left node of the tree
-template <typename T> TreeNode<T> *TreeNode<T>::getStart() {
-  return this->getTopOfTree()->getBottomLeft();
-}
 
-template <typename T> TreeNode<T> *TreeNode<T>::getBottomLeft() {
-  if (this->left == nullptr)
-    return this;
-  else {
-    TreeNode<T> *temp = this->left;
-    while (temp->left != nullptr) {
-      temp = temp->left;
-    }
-    return temp;
-  }
-}
-
-template <typename T> int TreeNode<T>::getTreeHeight() {
-  return (getTopOfTree()->getDepthFromNode() + 1);
-}
 
 template <typename T> int TreeNode<T>::getDepthOfNode() {
   if (parent == nullptr)
     return 0;
  //dunno how to fix this function, seg faults :~(
   return 1;
-}
-template <typename T> int TreeNode<T>::getDepthFromNode() {
-  /*
-**********************************************************
-This function doesn't work atm, dunno why
-**********************************************************
-  */
-  return 0;
-  // if (left == nullptr && right == nullptr)
-  //   return 0;
-  // else {
-  //   int lDepth, rDepth;
-
-  //   if (left != nullptr)
-  //     lDepth = left.getDepthFromNode();
-  //   else
-  //     lDepth = 0;
-
-  //   if (right != nullptr)
-  //     rDepth = right.getDepthFromNode();
-  //   else
-  //     rDepth = 0;
-
-  //   if (lDepth > rDepth)
-  //     return (lDepth + 1);
-  //   else
-  //     return (rDepth + 1);
-  // }
 }
 
 template <typename T> int TreeNode<T>::getChildCount() {
