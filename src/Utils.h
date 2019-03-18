@@ -1,6 +1,5 @@
+#include "CodeGeneration.h"
 #include <fstream>
-
-#include "Parser.h"
 namespace Utils {
 
 std::vector<char> readFile(std::string path);
