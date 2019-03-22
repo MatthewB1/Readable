@@ -1,5 +1,6 @@
 
 #include "Parser.h"
+#include <cassert>
 #include <iostream>
 
 namespace CodeGeneration {
@@ -8,8 +9,28 @@ void generate(std::vector<TreeNode<std::shared_ptr<Token>>> trees);
 
 void printCode(std::vector<std::string> statements);
 
-std::string walkTree(TreeNode<std::shared_ptr<Token>> tree);
+int maxStackSize(std::vector<TreeNode<std::shared_ptr<Token>>> &trees);
 
-void printTree(TreeNode<std::shared_ptr<Token>> *tree);
+void countOperators(int *max, TreeNode<std::shared_ptr<Token>> *node);
+
+void findIdentifiers(std::vector<std::string> *uniqueidentifiers,
+                     TreeNode<std::shared_ptr<Token>> *node);
+
+bool identifierSeen(std::vector<std::string> uniqueidentifiers,
+                    std::shared_ptr<Token> token);
+
+void findIdentifiers(std::vector<std::string> *uniqueidentifiers,
+                     TreeNode<std::shared_ptr<Token>> *node);
+
+void generateBytecode(std::vector<std::string> uniqueidentifiers,
+                      std::vector<std::string> *statements,
+                      TreeNode<std::shared_ptr<Token>> *node);
+
+std::deque<std::shared_ptr<Token>>
+toPostfix(TreeNode<std::shared_ptr<Token>> *expression);
+
+void printGenerateError(TreeNode<std::shared_ptr<Token>> *node);
+
+void printTree(TreeNode<std::shared_ptr<Token>> *node);
 
 } // namespace CodeGeneration
