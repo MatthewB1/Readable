@@ -58,13 +58,14 @@ void CodeGeneration::generate(
   argsString += ", args_size=0";
   statements.push_back(argsString);
 
+
   for (int i = 0; i < trees.size(); ++i) {
-    std::cout << "generating bytecode for statement...";
+    std::cout << "generating bytecode for statement..." << std::endl;
     generateBytecode(uniqueidentifiers, &statements, &trees[i]);
-    std::cout << "..." << std::endl;
   }
 
   printCode(statements);
+  saveToFile(statements);
 }
 
 void CodeGeneration::printCode(std::vector<std::string> statements) {
@@ -75,7 +76,16 @@ void CodeGeneration::printCode(std::vector<std::string> statements) {
     std::cout << "\t" << statements[i] << std::endl;
   }
 
-  std::cout << std::endl << "code compiled and saved to target.txt...";
+  std::cout << std::endl << "code compiled and saved to bytecode.txt...";
+}
+
+void CodeGeneration::saveToFile(std::vector<std::string> statements) {
+  std::ofstream file("bytecode.txt");
+  
+  for (size_t i = 0; i < statements.size(); ++i){
+    file << statements[i] << '\n';
+  }
+  file.close();
 }
 
 int CodeGeneration::maxStackSize(
@@ -141,24 +151,98 @@ void CodeGeneration::generateBytecode(
   if (node->getLeft() == nullptr || node->getRight() == nullptr)
     printGenerateError(node);
 
-  if (node->getData()->getTokenType() != op &&
-      node->getData()->getVal() != "=") {
-    printGenerateError(node);
-  }
-
   if (node->getLeft()->getData()->getTokenType() != identifier) {
     printGenerateError(node);
+    return;
   }
 
+  if (node->getData()->getTokenType() != op &&
+      node->getData()->getVal() != "=") {
+    return;
+  }
 
-  // auto statement = toPostfix(node->getRight());
+  auto statement = toPostfix(*node->getRight());
+
+  //create bytecode instructions
+  while (statement.size() > 0) {
+
+    if (statement.front()->getTokenType() == literal &&
+        statement.front()->getLiteralType() == number) {
+      statements->push_back("iconst_" + statement.front()->getVal());
+      statement.pop_front();
+      continue;
+    }
+
+    if (statement.front()->getTokenType() == identifier) {
+      auto i = indexOfIdentifier(statement.front()->getVal(),
+                                 uniqueidentifiers);
+      statements->push_back("iload_" + std::to_string(i));
+      statement.pop_front();
+      continue;
+    }
+
+    if (statement.front()->getTokenType() == op &&
+        statement.front()->getVal() != "=") {
+
+      if (statement.front()->getVal() == "+")
+        statements->push_back("iadd");
+
+      if (statement.front()->getVal() == "-")
+        statements->push_back("isub");
+
+      if (statement.front()->getVal() == "/")
+        statements->push_back("idiv");
+
+      if (statement.front()->getVal() == "*")
+        statements->push_back("imul");
+
+      statement.pop_front();
+      continue;
+    }
+
+    //if no case matches
+    printGenerateError(node);
+    return;
+  }
+
+  auto index = indexOfIdentifier(node->getLeft()->getData()->getVal(),
+                                 uniqueidentifiers);
+  // if (index != NULL)
+    statements->push_back("istore_" + std::to_string(index));
 }
 
 std::deque<std::shared_ptr<Token>>
-CodeGeneration::toPostfix(TreeNode<std::shared_ptr<Token>> *expression) {
-  //turn tree into vector
-  std::vector<std::shared_ptr<Token>> expressionVec(TreeUtils::size(expression));
-  // treeToVector(&expressionVec);
+CodeGeneration::toPostfix(TreeNode<std::shared_ptr<Token>> expression) {
+  // turn tree into vector
+  std::vector<std::shared_ptr<Token>> expressionVec;
+  treeToVector(&expression, &expressionVec);
+
+  auto size = expressionVec.size();
+
+  auto expressionDeque = Parser::toPostfix(expressionVec);
+
+  auto size2 = expressionVec.size();
+
+  return expressionDeque;
+}
+
+void CodeGeneration::treeToVector(
+    TreeNode<std::shared_ptr<Token>> *node,
+    std::vector<std::shared_ptr<Token>> *expressionVec) {
+  if (node == NULL)
+    return;
+  treeToVector(node->getLeft(), expressionVec);
+  expressionVec->push_back(node->getData());
+  treeToVector(node->getRight(), expressionVec);
+}
+
+int CodeGeneration::indexOfIdentifier(std::string identifier,
+                                      std::vector<std::string> &vector) {
+  for (size_t index = 0; index < vector.size(); ++index) {
+    if (identifier == vector[index])
+      return index;
+  }
+  return NULL;
 }
 
 void CodeGeneration::printGenerateError(

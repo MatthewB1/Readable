@@ -83,8 +83,6 @@ template <typename T> TreeNode<T> *TreeNode<T>::getTopOfTree() {
   }
 }
 
-
-
 template <typename T> int TreeNode<T>::getDepthOfNode() {
   if (parent == nullptr)
     return 0;

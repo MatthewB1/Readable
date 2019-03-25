@@ -1,5 +1,4 @@
 #include "CodeGeneration.h"
-#include <fstream>
 namespace Utils {
 
 std::vector<char> readFile(std::string path);

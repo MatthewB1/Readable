@@ -1,0 +1,10 @@
+Code:
+stack=2, locals=2, args_size=0
+iconst_3
+iconst_7
+iadd
+istore_0
+iload_0
+iconst_2
+imul
+istore_1
