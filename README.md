@@ -116,20 +116,21 @@ myFunction(myNumb,"argument!");
 
 ## Returning
 - return types do not need to be declared
-
+```
 function returnSeven(){
 return 7;
 }
-
+```
 ---
 
 #### Loops
 
 ##### while loop
-
+- you can do everything you need to with a while loop :~)
+```
 while (logical_expression) {
 //statement
 }
-
+```
 
 
