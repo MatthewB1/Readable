@@ -58,7 +58,6 @@ void CodeGeneration::generate(
   argsString += ", args_size=0";
   statements.push_back(argsString);
 
-
   for (int i = 0; i < trees.size(); ++i) {
     std::cout << "generating bytecode for statement..." << std::endl;
     generateBytecode(uniqueidentifiers, &statements, &trees[i]);
@@ -75,14 +74,15 @@ void CodeGeneration::printCode(std::vector<std::string> statements) {
   for (size_t i = 0; i < statements.size(); ++i) {
     std::cout << "\t" << statements[i] << std::endl;
   }
-
-  std::cout << std::endl << "code compiled and saved to bytecode.txt...";
 }
 
 void CodeGeneration::saveToFile(std::vector<std::string> statements) {
+
+  std::cout << std::endl << "code compiled and saved to bytecode.txt...";
+
   std::ofstream file("bytecode.txt");
-  
-  for (size_t i = 0; i < statements.size(); ++i){
+
+  for (size_t i = 0; i < statements.size(); ++i) {
     file << statements[i] << '\n';
   }
   file.close();
@@ -163,7 +163,7 @@ void CodeGeneration::generateBytecode(
 
   auto statement = toPostfix(*node->getRight());
 
-  //create bytecode instructions
+  // create bytecode instructions
   while (statement.size() > 0) {
 
     if (statement.front()->getTokenType() == literal &&
@@ -174,8 +174,8 @@ void CodeGeneration::generateBytecode(
     }
 
     if (statement.front()->getTokenType() == identifier) {
-      auto i = indexOfIdentifier(statement.front()->getVal(),
-                                 uniqueidentifiers);
+      auto i =
+          indexOfIdentifier(statement.front()->getVal(), uniqueidentifiers);
       statements->push_back("iload_" + std::to_string(i));
       statement.pop_front();
       continue;
@@ -200,7 +200,7 @@ void CodeGeneration::generateBytecode(
       continue;
     }
 
-    //if no case matches
+    // if no case matches
     printGenerateError(node);
     return;
   }
@@ -208,7 +208,7 @@ void CodeGeneration::generateBytecode(
   auto index = indexOfIdentifier(node->getLeft()->getData()->getVal(),
                                  uniqueidentifiers);
   // if (index != NULL)
-    statements->push_back("istore_" + std::to_string(index));
+  statements->push_back("istore_" + std::to_string(index));
 }
 
 std::deque<std::shared_ptr<Token>>

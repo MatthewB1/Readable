@@ -1,10 +1,8 @@
 Code:
-stack=2, locals=2, args_size=0
+stack=3, locals=1, args_size=0
 iconst_3
-iconst_7
+iconst_3
+idiv
+iconst_4
 iadd
 istore_0
-iload_0
-iconst_2
-imul
-istore_1

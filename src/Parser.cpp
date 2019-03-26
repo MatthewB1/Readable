@@ -74,6 +74,13 @@ TreeNode<std::shared_ptr<Token>> Parser::evaluateKeywordStatement(
     // variable declaration must match grammar:
     //<keyword><identifier><operator><expression>
     // keyword MUST be var, operator MUST be assignment operator
+    if (statement.size() < 3){
+      /*
+        statement does not match grammar : <identifier><operator><expression>
+      */
+      errorEvaluatingStatement();
+      exit(0);
+    }
     if (statement[1]->getTokenType() == identifier &&
         statement[2]->getVal() == "=") {
       // set '=' as root of tree
