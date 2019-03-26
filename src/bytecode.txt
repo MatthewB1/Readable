@@ -1,8 +1,14 @@
 Code:
-stack=3, locals=1, args_size=0
+stack=3, locals=2, args_size=0
 iconst_3
 iconst_3
-idiv
-iconst_4
+imul
+iconst_2
 iadd
 istore_0
+iconst_7
+iload_0
+iconst_2
+imul
+iadd
+istore_1
