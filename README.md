@@ -1,6 +1,7 @@
 # Compiler for a high-level language
 
 ---
+This was an area of programming I had very little knowledge of at the beginning of this project. It came with a set of problems that I'd never had to encounter and learned a lot, as such this is far from good code and if I were to start from scratch I'd have done many things differently. Regardless I enjoyed building this and am proud of it.
 
 ## Purpose
 The main focus of this project is the implementation of a compiler, but I need something to compiler. For this I have designed a relatively simple high-level language; in line with the ideas of literate programming, first put foward by Donald Knuth, this language will be designed with 'readability' in mind. 
